@@ -18,7 +18,7 @@ export default function WorkspaceTabs({ tabs }: { tabs: WorkspaceTab[] }) {
     <>
       <div
         role="tablist"
-        aria-label="System details"
+        aria-label="Detalhes do sistema"
         className="sticky top-0 z-[5] flex gap-1 overflow-x-auto border-b border-line bg-surface/95 px-3 pt-2 backdrop-blur"
       >
         {tabs.map((tab) => {

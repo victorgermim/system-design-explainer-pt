@@ -25,7 +25,7 @@ export async function generateMetadata(props: PageProps<"/concepts/[slug]">): Pr
   const { slug } = await props.params;
   const concept = getConcept(slug);
   if (!concept) return {};
-  return { title: `${concept.name} · Concepts · System Design Explainer`, description: concept.summary };
+  return { title: `${concept.name} · Conceitos · System Design Explainer`, description: concept.summary };
 }
 
 export default async function ConceptPage(props: PageProps<"/concepts/[slug]">) {
@@ -42,7 +42,7 @@ export default async function ConceptPage(props: PageProps<"/concepts/[slug]">) 
       <header className="bg-gradient-to-b from-cat-tint to-transparent">
         <div className="mx-auto max-w-4xl px-4 pb-4 pt-6 md:px-8 md:pt-10">
           <Link href="/concepts" className="text-xs text-muted hover:text-fg">
-            ← All concepts
+            ← Todos os conceitos
           </Link>
           <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-surface px-2.5 py-1 text-xs font-medium text-fg shadow-soft">
             <span className="text-cat">
@@ -65,12 +65,12 @@ export default async function ConceptPage(props: PageProps<"/concepts/[slug]">) 
           <section aria-labelledby="in-action" className="mt-10 space-y-5">
             <div>
               <h2 id="in-action" className="text-xl font-semibold text-fg">
-                See it in action
+                Veja em ação
               </h2>
               <p className="mt-1 text-sm text-muted">
                 {concept.visual
-                  ? "Play with the idea, then follow it through a real architecture."
-                  : "Step through the scenarios on the diagram."}
+                  ? "Brinque com a ideia e depois acompanhe-a em uma arquitetura real."
+                  : "Percorra os cenários no diagrama."}
               </p>
             </div>
             {concept.visual && <ConceptVisual visual={concept.visual} />}
@@ -79,13 +79,13 @@ export default async function ConceptPage(props: PageProps<"/concepts/[slug]">) 
         )}
 
         <div className="mt-10 grid gap-4 md:grid-cols-2">
-          {concept.howItWorks.length > 0 && <ListCard title="How it works" items={concept.howItWorks} />}
+          {concept.howItWorks.length > 0 && <ListCard title="Como funciona" items={concept.howItWorks} />}
           {concept.tradeoffs.length > 0 && <ListCard title="Trade-offs" items={concept.tradeoffs} />}
         </div>
 
         {usedBySystems.length > 0 && (
           <section className="mt-10">
-            <h2 className="text-xl font-bold text-fg">Seen in</h2>
+            <h2 className="text-xl font-bold text-fg">Visto em</h2>
             <ul className="mt-3 grid gap-3 sm:grid-cols-2">
               {usedBySystems.map((s) => (
                 <li key={s.slug}>
@@ -104,7 +104,7 @@ export default async function ConceptPage(props: PageProps<"/concepts/[slug]">) 
 
         {usedByComponents.length > 0 && (
           <section className="mt-10">
-            <h2 className="text-xl font-bold text-fg">Components involved</h2>
+            <h2 className="text-xl font-bold text-fg">Componentes envolvidos</h2>
             <div className="mt-3 flex flex-wrap gap-2">
               {usedByComponents.map((c) => (
                 <Link
@@ -124,7 +124,7 @@ export default async function ConceptPage(props: PageProps<"/concepts/[slug]">) 
 
         {concept.related.length > 0 && (
           <section className="mt-10">
-            <h2 className="text-xl font-bold text-fg">Related concepts</h2>
+            <h2 className="text-xl font-bold text-fg">Conceitos relacionados</h2>
             <div className="mt-3 flex flex-wrap gap-2">
               {concept.related.map((r) => (
                 <Link

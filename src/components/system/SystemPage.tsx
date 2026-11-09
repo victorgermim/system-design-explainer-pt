@@ -22,13 +22,13 @@ const methodColors: Record<string, string> = {
 
 /** Store families, matched on the first keyword in a data model's free-text store. */
 const storeTypes: { match: RegExp; label: string; className: string }[] = [
-  { match: /relational/i, label: "Relational", className: "text-sky-300 bg-sky-500/10" },
+  { match: /relational|relacional/i, label: "Relacional", className: "text-sky-300 bg-sky-500/10" },
   { match: /wide-column/i, label: "Wide-column", className: "text-violet-300 bg-violet-500/10" },
-  { match: /key-value|document/i, label: "Key-value", className: "text-amber-300 bg-amber-500/10" },
-  { match: /in-memory|cache/i, label: "In-memory", className: "text-rose-300 bg-rose-500/10" },
-  { match: /object storage|disk/i, label: "Object", className: "text-emerald-300 bg-emerald-500/10" },
-  { match: /search/i, label: "Search", className: "text-cyan-300 bg-cyan-500/10" },
-  { match: /graph/i, label: "Graph", className: "text-indigo-300 bg-indigo-500/10" },
+  { match: /key-value|document|chave-valor|documento/i, label: "Chave-valor", className: "text-amber-300 bg-amber-500/10" },
+  { match: /in-memory|cache|em memória/i, label: "Em memória", className: "text-rose-300 bg-rose-500/10" },
+  { match: /object storage|disk|armazenamento de objetos|disco/i, label: "Objeto", className: "text-emerald-300 bg-emerald-500/10" },
+  { match: /search|busca/i, label: "Busca", className: "text-cyan-300 bg-cyan-500/10" },
+  { match: /graph|grafo/i, label: "Grafo", className: "text-indigo-300 bg-indigo-500/10" },
 ];
 
 function storeType(store: string) {
@@ -47,19 +47,19 @@ const difficultyDots = { 1: "bg-emerald-500", 2: "bg-amber-500", 3: "bg-rose-500
  */
 export default function SystemPage({ system }: { system: SystemDesign }) {
   const tabs: WorkspaceTab[] = [
-    { id: "overview", label: "Overview", content: <OverviewPanel system={system} />, show: true },
+    { id: "overview", label: "Visão geral", content: <OverviewPanel system={system} />, show: true },
     { id: "apis", label: "APIs", content: <ApisPanel system={system} />, show: system.apis.length > 0 },
     {
       id: "capacity",
-      label: "Capacity",
+      label: "Capacidade",
       content: <CapacityPanel system={system} />,
       show: system.estimates.length > 0,
     },
-    { id: "data", label: "Data", content: <DataPanel system={system} />, show: system.dataModel.length > 0 },
-    { id: "flows", label: "Flows", content: <FlowsPanel system={system} />, show: system.flows.length > 0 },
+    { id: "data", label: "Dados", content: <DataPanel system={system} />, show: system.dataModel.length > 0 },
+    { id: "flows", label: "Fluxos", content: <FlowsPanel system={system} />, show: system.flows.length > 0 },
     {
       id: "reliability",
-      label: "Reliability",
+      label: "Confiabilidade",
       content: <ReliabilityPanel system={system} />,
       show: system.bottlenecks.length + system.scaling.length > 0,
     },
@@ -78,9 +78,9 @@ export default function SystemPage({ system }: { system: SystemDesign }) {
               <SystemIcon slug={system.slug} size={24} />
             </span>
             <div className="min-w-0">
-              <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted">
+              <nav aria-label="Caminho de navegação" className="flex items-center gap-1.5 text-xs text-muted">
                 <Link href="/" className="hover:text-fg">
-                  Systems
+                  Sistemas
                 </Link>
                 <span aria-hidden>/</span>
                 <span className="flex items-center gap-1">
@@ -129,7 +129,7 @@ function OverviewPanel({ system }: { system: SystemDesign }) {
       <p className="leading-relaxed text-fg-soft">{system.description}</p>
 
       {system.concepts.length > 0 && (
-        <Block title="Concepts">
+        <Block title="Conceitos">
           <div className="flex flex-wrap gap-1.5">
             {system.concepts.map((slug) => (
               <Link
@@ -145,7 +145,7 @@ function OverviewPanel({ system }: { system: SystemDesign }) {
       )}
 
       {system.requirements.functional.length > 0 && (
-        <Block title="Functional requirements">
+        <Block title="Requisitos funcionais">
           <BulletList
             items={system.requirements.functional}
             icon={CircleCheck}
@@ -154,12 +154,12 @@ function OverviewPanel({ system }: { system: SystemDesign }) {
         </Block>
       )}
       {system.requirements.nonFunctional.length > 0 && (
-        <Block title="Non-functional requirements">
+        <Block title="Requisitos não funcionais">
           <BulletList items={system.requirements.nonFunctional} icon={Gauge} iconClassName="text-sky-300" />
         </Block>
       )}
       {system.extensions.length > 0 && (
-        <Block title="Extensions">
+        <Block title="Extensões">
           <BulletList items={system.extensions} icon={Sparkles} iconClassName="text-violet-300" />
         </Block>
       )}
@@ -228,7 +228,7 @@ function DataPanel({ system }: { system: SystemDesign }) {
               </span>
             </div>
             <p className="mt-2 text-xs text-muted">
-              Key <span className="ml-1 font-mono text-[12px] text-accent">{d.key}</span>
+              Chave <span className="ml-1 font-mono text-[12px] text-accent">{d.key}</span>
             </p>
             <div className="mt-2 flex flex-wrap gap-1">
               {d.fields.map((f) => (
@@ -273,13 +273,13 @@ function ReliabilityPanel({ system }: { system: SystemDesign }) {
   return (
     <div className="space-y-8">
       {system.bottlenecks.length > 0 && (
-        <Block title="Bottlenecks & fixes">
+        <Block title="Gargalos e soluções">
           <div className="space-y-3">
             {system.bottlenecks.map((b) => (
               <article key={b.problem} className="rounded-xl border border-line p-4">
                 <p className="font-medium text-fg">{b.problem}</p>
                 <p className="mt-1.5 text-sm text-fg-soft">
-                  <span className="font-semibold text-emerald-300">Fix · </span>
+                  <span className="font-semibold text-emerald-300">Solução · </span>
                   {b.fix}
                 </p>
                 {b.nodes.length > 0 && (
@@ -295,7 +295,7 @@ function ReliabilityPanel({ system }: { system: SystemDesign }) {
         </Block>
       )}
       {system.scaling.length > 0 && (
-        <Block title="Scaling">
+        <Block title="Escalabilidade">
           <BulletList items={system.scaling} />
         </Block>
       )}

@@ -19,10 +19,10 @@ export default function GeoGrid() {
 
   return (
     <VisualFrame
-      title="Try it: move the rider"
-      hint="The city is split into cells. Click a cell to move the rider; matching only looks in that cell and its neighbours."
+      title="Experimente: mova o passageiro"
+      hint="A cidade é dividida em células. Clique em uma célula para mover o passageiro; o matching busca apenas nessa célula e nas vizinhas."
     >
-      <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }} role="grid" aria-label="City grid">
+      <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }} role="grid" aria-label="Grade da cidade">
         {Array.from({ length: COLS * ROWS }, (_, i) => {
           const c = i % COLS;
           const r = Math.floor(i / COLS);
@@ -33,7 +33,7 @@ export default function GeoGrid() {
               key={i}
               type="button"
               onClick={() => setRider([c, r])}
-              aria-label={`Cell ${c},${r}${drivers ? `, ${drivers} driver` : ""}${isRider ? ", rider here" : ""}`}
+              aria-label={`Célula ${c},${r}${drivers ? `, ${drivers} motorista` : ""}${isRider ? ", passageiro aqui" : ""}`}
               className={`flex aspect-square items-center justify-center rounded-md text-base transition-colors ${
                 near(c, r) ? "bg-accent-soft ring-1 ring-accent/40" : "bg-surface-2 hover:bg-line"
               }`}
@@ -44,9 +44,9 @@ export default function GeoGrid() {
         })}
       </div>
       <p className="mt-3 text-sm text-fg-soft" aria-live="polite">
-        Searched <span className="font-semibold text-fg">{cellsSearched}</span> of {COLS * ROWS} cells and checked{" "}
-        <span className="font-semibold text-fg">{candidates}</span> of {DRIVERS.length} drivers. Those few candidates are then
-        ranked by real road ETA.
+        Buscou em <span className="font-semibold text-fg">{cellsSearched}</span> de {COLS * ROWS} células e verificou{" "}
+        <span className="font-semibold text-fg">{candidates}</span> de {DRIVERS.length} motoristas. Esses poucos candidatos são então
+        classificados pelo tempo estimado de chegada (ETA) real nas vias.
       </p>
     </VisualFrame>
   );

@@ -7,12 +7,12 @@ export const NODE_HEIGHT = 84;
 
 /** Columns of the diagram, left to right. Every component category lands in one tier. */
 export const tiers = [
-  { id: "clients", label: "Clients" },
-  { id: "edge", label: "Edge & security" },
-  { id: "services", label: "Services" },
-  { id: "async", label: "Async & streaming" },
-  { id: "data", label: "Data" },
-  { id: "platform", label: "Analytics & platform" },
+  { id: "clients", label: "Clientes" },
+  { id: "edge", label: "Borda e segurança" },
+  { id: "services", label: "Serviços" },
+  { id: "async", label: "Assíncrono e streaming" },
+  { id: "data", label: "Dados" },
+  { id: "platform", label: "Analytics e plataforma" },
 ] as const;
 export type TierId = (typeof tiers)[number]["id"];
 

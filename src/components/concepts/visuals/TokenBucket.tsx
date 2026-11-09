@@ -31,11 +31,11 @@ export default function TokenBucket() {
 
   return (
     <VisualFrame
-      title="Try it: send requests"
-      hint={`The bucket holds ${CAPACITY} tokens and refills one per second. Each request takes a token; an empty bucket means 429.`}
+      title="Experimente: enviar requisições"
+      hint={`O balde comporta ${CAPACITY} tokens e recarrega um por segundo. Cada requisição consome um token; um balde vazio resulta em 429.`}
     >
       <div className="flex flex-col gap-5 md:flex-row md:items-center">
-        <div className="flex items-end gap-1.5" role="img" aria-label={`${tokens} of ${CAPACITY} tokens`}>
+        <div className="flex items-end gap-1.5" role="img" aria-label={`${tokens} de ${CAPACITY} tokens`}>
           {Array.from({ length: CAPACITY }, (_, i) => (
             <div
               key={i}
@@ -51,9 +51,9 @@ export default function TokenBucket() {
         </div>
         <div className="flex flex-wrap gap-2">
           <VisualButton primary onClick={() => send(1)}>
-            Send 1 request
+            Enviar 1 requisição
           </VisualButton>
-          <VisualButton onClick={() => send(8)}>Burst of 8</VisualButton>
+          <VisualButton onClick={() => send(8)}>Rajada de 8</VisualButton>
         </div>
       </div>
 
@@ -68,10 +68,10 @@ export default function TokenBucket() {
             {entry.ok ? "200 OK" : "429 Too Many"}
           </li>
         ))}
-        {log.length === 0 && <li className="text-sm text-muted">Responses appear here.</li>}
+        {log.length === 0 && <li className="text-sm text-muted">As respostas aparecem aqui.</li>}
       </ul>
       <p className="mt-3 text-sm text-muted">
-        Bursts up to the bucket size are allowed; after that the client is held to the refill rate.
+        Rajadas até o tamanho do balde são permitidas; depois disso, o cliente fica limitado à taxa de recarga.
       </p>
     </VisualFrame>
   );

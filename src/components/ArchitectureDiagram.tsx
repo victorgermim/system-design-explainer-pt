@@ -84,7 +84,7 @@ export default function ArchitectureDiagram({
         />
       ) : (
         <div className="flex h-full flex-col items-center justify-center gap-4 p-8" role="status">
-          <span className="sr-only">Laying out diagram…</span>
+          <span className="sr-only">Organizando o diagrama…</span>
           {[3, 4, 2].map((count, row) => (
             <div key={row} className="flex gap-4" aria-hidden>
               {Array.from({ length: count }, (_, i) => (

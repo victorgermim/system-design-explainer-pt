@@ -35,8 +35,8 @@ export default function WorkspaceShell({
         <button
           type="button"
           onClick={() => setCollapsed(!collapsed)}
-          aria-label={collapsed ? "Show details panel" : "Hide details panel"}
-          title={collapsed ? "Show details panel" : "Hide details panel"}
+          aria-label={collapsed ? "Mostrar painel de detalhes" : "Ocultar painel de detalhes"}
+          title={collapsed ? "Mostrar painel de detalhes" : "Ocultar painel de detalhes"}
           className="absolute right-4 top-4 z-10 hidden rounded-lg border border-line bg-surface p-1.5 text-muted transition-colors hover:text-fg lg:block"
         >
           {collapsed ? <PanelRightOpen size={16} /> : <PanelRightClose size={16} />}
@@ -44,7 +44,7 @@ export default function WorkspaceShell({
         {left}
       </section>
       <aside
-        aria-label="Details"
+        aria-label="Detalhes"
         className={`relative min-h-0 border-t border-line bg-surface lg:h-full lg:overflow-y-auto lg:border-l lg:border-t-0 ${
           collapsed ? "lg:hidden" : ""
         }`}

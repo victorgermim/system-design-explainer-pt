@@ -1,83 +1,83 @@
-# UI Redesign Plan (v2)
+# Plano de Redesign de UI (v2)
 
-This version redefines the UI changes so the redesign has room for the depth features in
-[IMPROVEMENTS_PLAN.md](IMPROVEMENTS_PLAN.md): capacity calculator, failure simulator, security
-overlay, cost estimator, observability, interview mode and code labs. v1 only restyled today's
-pages; v2 restructures them so those features fit without making pages longer.
-
----
-
-## 1. Principles
-
-1. **The diagram is the product.** Every system page is built around a large, persistent diagram;
-   text, numbers and tools sit beside it, not above it.
-2. **One page, many lenses.** Instead of more sections, the same diagram is viewed through *modes*:
-   Architecture · Walkthrough · Failure · Security · Cost · Trace.
-3. **Show, then explain.** Every number and claim can be expanded into its formula, rule or reason.
-4. **Progressive depth.** Overview first; depth (indexes, SLOs, configs, code) one click away.
-5. **Calm and fast.** Light-first, few borders, strong type, short purposeful motion, works on phones.
+Esta versão redefine as alterações de UI para que o redesign tenha espaço para as funcionalidades de profundidade em
+[IMPROVEMENTS_PLAN.md](IMPROVEMENTS_PLAN.md): calculadora de capacidade, simulador de falhas, sobreposição de
+segurança, estimador de custos, observabilidade, modo de entrevista e laboratórios de código. A v1 apenas reestilizou as
+páginas atuais; a v2 as reestrutura para que essas funcionalidades caibam sem tornar as páginas mais longas.
 
 ---
 
-## 2. Visual language
+## 1. Princípios
 
-### Tokens (replacing the current slate-inversion trick)
+1. **O diagrama é o produto.** Cada página de sistema é construída em torno de um diagrama grande e persistente;
+   texto, números e ferramentas ficam ao lado dele, não acima.
+2. **Uma página, muitas lentes.** Em vez de mais seções, o mesmo diagrama é visto através de *modos*:
+   Arquitetura · Passo a passo · Falha · Segurança · Custo · Trace.
+3. **Mostrar e depois explicar.** Cada número e afirmação pode ser expandido em sua fórmula, regra ou motivo.
+4. **Profundidade progressiva.** Visão geral primeiro; profundidade (índices, SLOs, configurações, código) a um clique de distância.
+5. **Calmo e rápido.** Modo claro primeiro (light-first), poucas bordas, tipografia forte, movimento curto e intencional, funciona em celulares.
 
-| Token | Light | Dark | Use |
+---
+
+## 2. Linguagem visual
+
+### Tokens (substituindo o truque atual de inversão do slate)
+
+| Token | Claro | Escuro | Uso |
 |---|---|---|---|
-| `--bg` | `#FAFAF9` | `#0B0D12` | Page |
-| `--surface` | `#FFFFFF` | `#12151C` | Cards, panels |
-| `--surface-raised` | `#FFFFFF` + shadow | `#181C25` | Popovers, sheets |
-| `--border` | `#E7E5E4` | `#232836` | Dividers (used sparingly) |
-| `--text` | `#1C1917` | `#ECEDEE` | Body |
-| `--text-muted` | `#57534E` | `#9BA1AE` | Secondary (≥ 4.5:1) |
-| `--accent` | `#4F46E5` | `#818CF8` | Links, focus, primary actions |
-| `--accent-soft` | indigo 8% | indigo 14% | Selected states |
-| `--danger` / `--warn` / `--ok` | red / amber / green 600 | 400 | Failure sim, SLO status |
+| `--bg` | `#FAFAF9` | `#0B0D12` | Página |
+| `--surface` | `#FFFFFF` | `#12151C` | Cards, painéis |
+| `--surface-raised` | `#FFFFFF` + sombra | `#181C25` | Popovers, gavetas (sheets) |
+| `--border` | `#E7E5E4` | `#232836` | Divisores (usados com moderação) |
+| `--text` | `#1C1917` | `#ECEDEE` | Corpo do texto |
+| `--text-muted` | `#57534E` | `#9BA1AE` | Secundário (≥ 4,5:1) |
+| `--accent` | `#4F46E5` | `#818CF8` | Links, foco, ações primárias |
+| `--accent-soft` | índigo 8% | índigo 14% | Estados selecionados |
+| `--danger` / `--warn` / `--ok` | vermelho / âmbar / verde 600 | 400 | Simulador de falhas, status de SLO |
 
-Defined once per theme, exposed to Tailwind through `@theme` (`bg-surface`, `text-muted`, …).
-Category and provider colours become **tints** (10–14%) with a coloured 3-px edge, not solid fills.
+Definidos uma vez por tema, expostos ao Tailwind através de `@theme` (`bg-surface`, `text-muted`, …).
+As cores de categoria e provedor tornam-se **tons suaves (tints)** (10–14%) com uma borda colorida de 3 px, e não preenchimentos sólidos.
 
-### Typography
-- Display: **Geist** 600–700 (already loaded), tracking −2%; page titles 40/48, section titles 24/32.
-- Body 16/26, small 14/22, labels 12/16 uppercase only for overlines.
-- Mono (Geist Mono) for APIs, keys, formulas and code.
+### Tipografia
+- Display: **Geist** 600–700 (já carregada), espaçamento (tracking) −2%; títulos de página 40/48, títulos de seção 24/32.
+- Corpo 16/26, pequeno 14/22, rótulos 12/16 em maiúsculas apenas para sobretítulos (overlines).
+- Mono (Geist Mono) para APIs, chaves, fórmulas e código.
 
-### Shape, depth and motion
-- Radius 12 px (cards), 8 px (controls), full for pills. Fewer borders; elevation via soft shadow
-  (light) or 1-px top highlight (dark).
-- Motion 150–250 ms ease-out: panels slide, provider labels cross-fade, walkthrough edges "draw",
-  failures pulse once. Everything respects `prefers-reduced-motion`.
-
----
-
-## 3. Global layout & navigation
-
-- **Top bar (56 px)** replaces the sidebar: logo · *Systems* (mega-menu by category) · *Components* ·
-  *Concepts* · *Practice* (interview mode) · search (⌘K) · theme toggle.
-- **Command palette** becomes the fastest navigation: systems, components, concepts, services and
-  actions ("Simulate Redis failure in Uber", "Switch to Azure").
-- **Breadcrumb + context switcher** on system pages: `Systems / Mobility / Uber ▾` to jump between
-  related systems.
-- Max content width 1280 px; system workspace uses the full width.
+### Forma, profundidade e movimento
+- Raio de borda de 12 px (cards), 8 px (controles), completo para pílulas. Menos bordas; elevação por sombra suave
+  (claro) ou brilho superior de 1 px (escuro).
+- Movimento de 150–250 ms ease-out: painéis deslizam, rótulos de provedor fazem cross-fade, arestas do passo a passo "se desenham",
+  falhas pulsam uma vez. Tudo respeita `prefers-reduced-motion`.
 
 ---
 
-## 4. Page-by-page
+## 3. Layout global e navegação
 
-### 4.1 Home — landing + catalogue
-1. **Hero:** headline, one-line value prop, and a **live mini-diagram** (URL shortener) that cycles
-   AWS → GCP → Azure → OSS labels and plays a 3-step walkthrough. CTA: *Explore a system* /
-   *Start a learning path*.
-2. **"Choose your lens"** strip: six small cards demoing the modes (architecture, walkthrough,
-   failure, security, cost, interview).
-3. **Learning paths:** Beginner → Intermediate → Advanced sequences with progress rings.
-4. **Catalogue:** cards with an auto-generated **diagram thumbnail**, category tint, difficulty dot,
-   concepts on hover; filters become a compact toolbar with a filter popover.
+- **Barra superior (56 px)** substitui a barra lateral: logo · *Sistemas* (mega-menu por categoria) · *Componentes* ·
+  *Conceitos* · *Prática* (modo de entrevista) · busca (⌘K) · alternador de tema.
+- **Paleta de comandos** torna-se a navegação mais rápida: sistemas, componentes, conceitos, serviços e
+  ações ("Simular falha do Redis no Uber", "Mudar para Azure").
+- **Caminho de navegação (breadcrumb) + seletor de contexto** nas páginas de sistema: `Sistemas / Mobilidade / Uber ▾` para pular entre
+  sistemas relacionados.
+- Largura máxima de conteúdo de 1280 px; o espaço de trabalho do sistema usa a largura total.
 
-### 4.2 System workspace (the core redesign)
+---
 
-**Desktop (≥ 1024 px): split view**
+## 4. Página por página
+
+### 4.1 Início — página de entrada + catálogo
+1. **Hero:** título principal, proposta de valor em uma linha e um **mini-diagrama ao vivo** (encurtador de URL) que alterna
+   os rótulos AWS → GCP → Azure → OSS e reproduz um fluxo passo a passo de 3 etapas. CTA: *Explorar um sistema* /
+   *Iniciar uma trilha de aprendizado*.
+2. **Faixa "Escolha sua lente"**: seis pequenos cards demonstrando os modos (arquitetura, passo a passo,
+   falha, segurança, custo, entrevista).
+3. **Trilhas de aprendizado:** sequências Iniciante → Intermediário → Avançado com anéis de progresso.
+4. **Catálogo:** cards com uma **miniatura do diagrama** gerada automaticamente, tom da categoria, ponto de dificuldade,
+   conceitos ao passar o mouse; os filtros viram uma barra de ferramentas compacta com um popover de filtros.
+
+### 4.2 Espaço de trabalho do sistema (o núcleo do redesign)
+
+**Desktop (≥ 1024 px): visualização dividida**
 
 ```
 ┌ Breadcrumb · Uber ▾ ─────────────────────────── Provider [Generic|AWS|GCP|Azure|OSS] ┐
@@ -93,103 +93,103 @@ Category and provider colours become **tints** (10–14%) with a coloured 3-px e
 └──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-- **Diagram ↔ panel sync:** hovering a data-model row highlights its store; clicking a node opens a
-  node sheet *inside the panel* (not over the diagram); a bottleneck card "focuses" its nodes.
-- **Panel tabs** absorb today's nine sections and the new features:
+- **Sincronização diagrama ↔ painel:** passar o mouse sobre uma linha do modelo de dados destaca seu armazenamento; clicar em um nó abre uma
+  gaveta do nó *dentro do painel* (não sobre o diagrama); um card de gargalo "foca" seus nós.
+- **Abas do painel** absorvem as nove seções atuais e as novas funcionalidades:
 
-| Tab | Contents |
+| Aba | Conteúdo |
 |---|---|
-| Overview | Description, requirements (functional / non-functional), concepts, ADR cards, "evolution v1→v3" mini-timeline |
-| Capacity | Calculator inputs (sliders, presets), live outputs with expandable formulas, sizing table |
-| Data | Entities as cards (partition/sort keys, indexes, TTL), query → index matrix, hot-partition warnings, DDL toggle |
-| Reliability | SLO cards with error-budget bars, RTO/RPO, bottlenecks & fixes, scaling notes |
-| Security | Identity flow, RBAC/ABAC table, data classification, secrets, threat cards |
-| Cost | Provider comparison bars (ranges), top cost drivers, savings tips, assumptions |
-| Observability | Golden signals per node, top alerts, trace waterfall of the selected flow |
-| Interview | Questions → follow-ups → good answer / red flags, rubric, "start mock" button |
-| Code | Snippet for the selected node / flow step in the chosen language, link to the lab |
+| Visão geral | Descrição, requisitos (funcionais / não funcionais), conceitos, cards de ADR, mini-linha do tempo de "evolução v1→v3" |
+| Capacidade | Entradas da calculadora (sliders, predefinições), saídas ao vivo com fórmulas expansíveis, tabela de dimensionamento |
+| Dados | Entidades como cards (chaves de partição/ordenação, índices, TTL), matriz consulta → índice, avisos de partição quente, alternador de DDL |
+| Confiabilidade | Cards de SLO com barras de orçamento de erros, RTO/RPO, gargalos e soluções, notas de escalabilidade |
+| Segurança | Fluxo de identidade, tabela RBAC/ABAC, classificação de dados, segredos, cards de ameaças |
+| Custo | Barras de comparação de provedores (faixas), principais geradores de custo, dicas de economia, premissas |
+| Observabilidade | Golden signals por nó, principais alertas, cascata de trace do fluxo selecionado |
+| Entrevista | Perguntas → perguntas de acompanhamento → boa resposta / sinais de alerta, rubrica, botão "iniciar simulado" |
+| Código | Trecho de código para o nó / passo do fluxo selecionado na linguagem escolhida, link para o laboratório |
 
-- **Tablet (768–1023 px):** diagram on top (60 vh, sticky), panel below with tabs as a horizontal
-  scroller.
-- **Phone:** tabs become a bottom segmented bar; the tier list replaces the canvas (as today), with
-  modes applied to the list (failed items red, encrypted links badged, costs per item).
+- **Tablet (768–1023 px):** diagrama no topo (60 vh, fixo), painel abaixo com abas em rolagem
+  horizontal.
+- **Celular:** as abas viram uma barra segmentada inferior; a lista de camadas substitui o canvas (como hoje), com
+  os modos aplicados à lista (itens com falha em vermelho, links criptografados com selo, custos por item).
 
-### 4.3 Diagram modes
+### 4.3 Modos do diagrama
 
-| Mode | What changes on the canvas | Dock controls |
+| Modo | O que muda no canvas | Controles na barra inferior (dock) |
 |---|---|---|
-| Architecture | Default; provider labels and logos; ×N sizing badges from Capacity | Legend chips, fit, layout density |
-| Walkthrough | Active edge draws with a moving packet; visited path solid; rest faded; caption in dock | Flow picker, prev / play / next, speed |
-| Failure | Failed node red with ✕, impacted sync paths amber, queues pulse with backlog count | "Break" menu (per node or scenario), "Apply fix" toggles, impact summary |
-| Security | Trust-boundary lanes (internet / edge / private / PCI), lock on encrypted edges, PII badges on stores | Boundary toggle, highlight PII flows |
-| Cost | Node size or heat shows monthly cost share; labels show $ range | Provider, preset, monthly / yearly |
-| Trace | Selected flow renders as a span waterfall beside the canvas; nodes show latency budget | Flow picker, p50 / p99 toggle |
+| Arquitetura | Padrão; rótulos e logos de provedores; selos de dimensionamento ×N vindos de Capacidade | Chips de legenda, ajustar à tela, densidade do layout |
+| Passo a passo | A aresta ativa se desenha com um pacote em movimento; caminho visitado sólido; restante esmaecido; legenda no dock | Seletor de fluxo, anterior / reproduzir / próximo, velocidade |
+| Falha | Nó com falha em vermelho com ✕, caminhos síncronos impactados em âmbar, filas pulsam com contagem de backlog | Menu "Quebrar" (por nó ou cenário), alternadores "Aplicar correção", resumo de impacto |
+| Segurança | Raias de fronteira de confiança (internet / borda / privada / PCI), cadeado em arestas criptografadas, selos de PII nos armazenamentos | Alternador de fronteiras, destacar fluxos de PII |
+| Custo | Tamanho ou calor do nó mostra a fatia do custo mensal; rótulos mostram faixa em $ | Provedor, predefinição, mensal / anual |
+| Trace | O fluxo selecionado é renderizado como uma cascata de spans ao lado do canvas; nós mostram orçamento de latência | Seletor de fluxo, alternador p50 / p99 |
 
-### 4.4 Node design (canvas)
-- 240×96 px; **3-px left edge in category colour**, provider logo top-right, service name in 15 px
-  semibold, generic label + role on hover/expand.
-- States: default · hover (raised) · selected (accent ring) · in-path (amber edge) · failed (red,
-  hatched) · faded (40% opacity).
-- **Expandable nodes** ("+" button) reveal internals for deep-dive services (e.g. Uber matching
-  pipeline) as a nested sub-graph.
+### 4.4 Design dos nós (canvas)
+- 240×96 px; **borda esquerda de 3 px na cor da categoria**, logo do provedor no canto superior direito, nome do serviço em 15 px
+  semibold, rótulo genérico + papel ao passar o mouse/expandir.
+- Estados: padrão · hover (elevado) · selecionado (anel de destaque) · no caminho (borda âmbar) · com falha (vermelho,
+  hachurado) · esmaecido (40% de opacidade).
+- **Nós expansíveis** (botão "+") revelam o funcionamento interno para serviços detalhados (por exemplo, pipeline de
+  pareamento do Uber) como um sub-grafo aninhado.
 
-### 4.5 Components & Concepts
-- **Component page:** hero with provider tabs; *Compare* table (configs, limits, managed vs
-  self-hosted effort, lock-in); "Used in" as diagram thumbnails that open the system with that node
-  selected; kind-level failure modes, security controls, golden signals and pricing units.
-- **Concept page:** a short animated explainer diagram at the top, then explanation, trade-offs,
-  "seen in" thumbnails, related concepts as a small graph.
+### 4.5 Componentes e Conceitos
+- **Página de componente:** hero com abas de provedores; tabela *Comparar* (configurações, limites, esforço gerenciado vs
+  auto-hospedado, lock-in); "Usado em" como miniaturas de diagramas que abrem o sistema com aquele nó
+  selecionado; modos de falha por tipo, controles de segurança, golden signals e unidades de preço.
+- **Página de conceito:** um pequeno diagrama explicativo animado no topo, seguido de explicação, trade-offs,
+  miniaturas "visto em", conceitos relacionados como um pequeno grafo.
 
-### 4.6 Practice (interview mode)
-- Pick a system → 45-minute timer with phase stepper (Clarify · Estimate · API · Data · Design ·
-  Deep dive · Wrap-up); the workspace opens with tabs hidden until each phase is reached; hints
-  ladder; self-score rubric; history stored locally.
+### 4.6 Prática (modo de entrevista)
+- Escolha um sistema → cronômetro de 45 minutos com passo a passo de fases (Esclarecer · Estimar · API · Dados · Design ·
+  Aprofundamento · Conclusão); o espaço de trabalho abre com as abas ocultas até que cada fase seja alcançada; escada
+  de dicas; rubrica de autoavaliação; histórico salvo localmente.
 
 ---
 
-## 5. Component library
+## 5. Biblioteca de componentes
 
-Built on **shadcn/ui (Radix)** primitives, styled with the tokens:
+Construída sobre primitivos **shadcn/ui (Radix)**, estilizada com os tokens:
 Button, IconButton, Tabs, Sheet, Dialog, Popover, Tooltip, Command (⌘K), Slider, Segmented control,
 Toggle group, Badge/Pill, Card, Table, Accordion, Progress ring, Toast.
-Custom: `DiagramCanvas`, `ModeDock`, `NodeCard`, `SwimlaneTier`, `FormulaReveal`, `SloCard`,
+Personalizados: `DiagramCanvas`, `ModeDock`, `NodeCard`, `SwimlaneTier`, `FormulaReveal`, `SloCard`,
 `CostBar`, `TraceWaterfall`, `ThreatCard`, `CodeTabs`, `DiagramThumbnail`.
 
 ---
 
-## 6. Accessibility & performance
+## 6. Acessibilidade e desempenho
 
-- WCAG 2.2 AA in both themes (checked with axe in CI); every mode has a text equivalent in the
-  panel (diagram is never the only source of information).
-- Full keyboard support on the canvas: Tab between nodes, Enter to select, arrow keys to walk edges.
-- Lighthouse budgets: LCP < 2 s, CLS < 0.05; diagram thumbnails pre-rendered as SVG at build time;
-  ELK layout precomputed at build and shipped as JSON (no layout work in the browser).
+- WCAG 2.2 AA em ambos os temas (verificado com axe no CI); cada modo possui um equivalente em texto no
+  painel (o diagrama nunca é a única fonte de informação).
+- Suporte completo a teclado no canvas: Tab entre nós, Enter para selecionar, setas para percorrer arestas.
+- Orçamentos do Lighthouse: LCP < 2 s, CLS < 0,05; miniaturas de diagramas pré-renderizadas como SVG em tempo de build;
+  layout ELK pré-computado no build e entregue como JSON (sem trabalho de layout no navegador).
 
 ---
 
-## 7. Delivery phases (aligned with IMPROVEMENTS_PLAN.md)
+## 7. Fases de entrega (alinhadas com IMPROVEMENTS_PLAN.md)
 
-| Phase | UI work | Unlocks |
+| Fase | Trabalho de UI | Desbloqueia |
 |---|---|---|
-| 1. Foundations | Tokens, type scale, top bar, ⌘K actions, shadcn primitives, restyled cards | Everything |
-| 2. Workspace shell | Split view, panel tabs (Overview, Data, Reliability), mode bar + dock, node redesign, swimlanes, precomputed layouts | Current content in new layout |
-| 3. Capacity & Cost | Capacity tab + ×N badges, Cost tab + Cost mode | Calculator, cost estimator |
-| 4. Failure & Security | Failure mode + Reliability tab upgrades, Security mode + tab | Simulator, security |
-| 5. Trace & Observability | Trace mode, waterfall, Observability tab | Observability |
-| 6. Practice & Code | Practice page, Interview tab, Code tab | Interview mode, labs |
-| 7. Landing & polish | Hero mini-diagram, learning paths, thumbnails, motion, visual-regression tests | Discovery |
+| 1. Fundações | Tokens, escala tipográfica, barra superior, ações no ⌘K, primitivos shadcn, cards reestilizados | Tudo |
+| 2. Shell do espaço de trabalho | Visualização dividida, abas do painel (Visão geral, Dados, Confiabilidade), barra de modos + dock, redesign dos nós, raias (swimlanes), layouts pré-computados | Conteúdo atual no novo layout |
+| 3. Capacidade e Custo | Aba Capacidade + selos ×N, aba Custo + modo Custo | Calculadora, estimador de custos |
+| 4. Falha e Segurança | Modo Falha + melhorias na aba Confiabilidade, modo + aba Segurança | Simulador, segurança |
+| 5. Trace e Observabilidade | Modo Trace, cascata (waterfall), aba Observabilidade | Observabilidade |
+| 6. Prática e Código | Página Prática, aba Entrevista, aba Código | Modo de entrevista, laboratórios |
+| 7. Página inicial e refinamento | Mini-diagrama no hero, trilhas de aprendizado, miniaturas, movimento, testes de regressão visual | Descoberta |
 
-Each phase ships behind the same URLs; old query parameters (`?cloud=&node=&flow=&step=`) keep
-working and gain `mode=` and `tab=`.
+Cada fase é entregue nas mesmas URLs; os parâmetros de consulta antigos (`?cloud=&node=&flow=&step=`) continuam
+funcionando e ganham `mode=` e `tab=`.
 
 ---
 
-## 8. What changes from v1 of this plan
+## 8. O que muda em relação à v1 deste plano
 
 | v1 | v2 |
 |---|---|
-| Restyle existing sections | Restructure into a diagram-centred workspace with tabs and modes |
-| Split view with generic tabs | Tabs mapped one-to-one to the new depth features |
-| Animated walkthrough only | Six diagram modes sharing one canvas and dock |
-| Sidebar → top nav | Top nav + ⌘K actions + Practice section |
-| Visual polish phases | Phases aligned with the feature roadmap so each UI step ships a capability |
+| Reestilizar as seções existentes | Reestruturar em um espaço de trabalho centrado no diagrama com abas e modos |
+| Visualização dividida com abas genéricas | Abas mapeadas um-para-um para as novas funcionalidades de profundidade |
+| Apenas passo a passo animado | Seis modos de diagrama compartilhando o mesmo canvas e dock |
+| Barra lateral → navegação superior | Navegação superior + ações no ⌘K + seção Prática |
+| Fases de refinamento visual | Fases alinhadas com o roteiro de funcionalidades para que cada etapa de UI entregue uma capacidade |

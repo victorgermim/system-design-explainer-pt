@@ -1,33 +1,31 @@
-# Depth Improvements Plan
+# Plano de Melhorias de Profundidade
 
-Turns the ten suggested improvements (deeper architecture, interactive capacity, database design,
-cloud configs, security, reliability, cost, observability, interview prep, implementation) into a
-build plan that fits the current codebase.
-
----
-
-## 0. The key idea: define depth once per component kind
-
-The site has **36 systems → 529 diagram nodes → only 36 component kinds**. Writing failure modes,
-security controls, metrics and prices for 529 nodes by hand isn't realistic; writing them for 36
-kinds is. Every new feature therefore has two layers:
-
-1. **Kind-level defaults** in `src/content/components.ts` — how a *cache* fails, what a *relational DB*
-   should be monitored for, how an *API gateway* is secured, how *object storage* is priced. Every
-   system gets these automatically.
-2. **System-level overrides** in `src/content/systems/*.ts` — only where a system is special (Uber's
-   geo index, the payment ledger). Written in depth for the 10 flagship systems first.
-
-All new fields are **optional** in the Zod schema, so sections appear as content is added and the
-site never breaks mid-rollout. `npm run validate` gains checks for each new field.
+Transforma as dez melhorias sugeridas (arquitetura mais profunda, capacidade interativa, design de banco de dados,
+configurações de nuvem, segurança, confiabilidade, custo, observabilidade, preparação para entrevistas, implementação) em um
+plano de construção que se encaixa na base de código atual.
 
 ---
 
-## 1. Interactive capacity calculator  ★ build first
+## 0. A ideia principal: definir profundidade uma vez por tipo de componente
 
-Foundation for cost, sizing and failure simulation.
+O site possui **36 sistemas → 529 nós de diagrama → apenas 36 tipos de componentes**. Escrever modos de falha,
+controles de segurança, métricas e preços para 529 nós manualmente não é realista; escrevê-los para 36
+tipos é. Portanto, cada nova funcionalidade tem duas camadas:
 
-**Schema** — `estimates` becomes a small model:
+1. **Padrões por tipo (kind-level)** em `src/content/components.ts` — como um *cache* falha, o que deve ser monitorado em um *BD relacional*, como um *API gateway* é protegido, como o *armazenamento de objetos* é precificado. Todo
+   sistema recebe isso automaticamente.
+2. **Sobrescritas por sistema (system-level)** em `src/content/systems/*.ts` — apenas onde um sistema é especial (o índice geográfico do Uber, o livro-razão de pagamentos). Escrito em profundidade primeiro para os 10 sistemas principais.
+
+Todos os novos campos são **opcionais** no schema Zod, para que as seções apareçam conforme o conteúdo é adicionado e o
+site nunca quebre durante a implementação gradual. `npm run validate` ganha verificações para cada novo campo.
+
+---
+
+## 1. Calculadora de capacidade interativa ★ construir primeiro
+
+Base para custo, dimensionamento e simulação de falhas.
+
+**Schema** — `estimates` se torna um pequeno modelo:
 
 ```ts
 capacity: {
@@ -53,22 +51,22 @@ capacity: {
 }
 ```
 
-**UI**
-- Sliders and inputs with log scales for big numbers; presets: *Startup · Growth · Hyperscale*.
-- Every output shows its formula with live numbers substituted, keeping the teaching value.
-- A sizing table (instances, shards, cache nodes, bandwidth); diagram nodes get a small "×12" badge.
-- Inputs stored in the URL, so a scenario can be shared.
+**Interface (UI)**
+- Controles deslizantes (sliders) e campos numéricos com escala logarítmica para números grandes; predefinições: *Startup · Crescimento · Hiperescala*.
+- Cada saída mostra sua fórmula com os números ao vivo substituídos, mantendo o valor didático.
+- Uma tabela de dimensionamento (instâncias, shards, nós de cache, largura de banda); os nós do diagrama ganham um pequeno selo "×12".
+- Entradas armazenadas na URL, para que um cenário possa ser compartilhado.
 
-**Engineering**
-- A tiny safe expression evaluator (no `eval`), such as `expr-eval`, or a 100-line parser.
-- The validator evaluates every model with its defaults: all outputs must be finite, formulas may only
-  reference declared ids, and defaults should reproduce today's published numbers.
+**Engenharia**
+- Um pequeno avaliador de expressões seguro (sem `eval`), como `expr-eval`, ou um parser de 100 linhas.
+- O validador avalia cada modelo com seus valores padrão: todas as saídas devem ser finitas, as fórmulas só podem
+  referenciar IDs declarados e os padrões devem reproduzir os números publicados atualmente.
 
 ---
 
-## 2. Deeper database design
+## 2. Design de banco de dados mais profundo
 
-Extend each `dataModel` entry:
+Estender cada entrada de `dataModel`:
 
 ```ts
 {
@@ -87,18 +85,18 @@ Extend each `dataModel` entry:
 }
 ```
 
-- A **"query → index" matrix** per system shows which access pattern hits which key or index. This
-  is the most common interview gap.
-- Hot-partition warnings computed from the capacity model (e.g. a celebrity partition exceeding
-  per-partition throughput).
-- Optional generated DDL / table definitions per store (PostgreSQL `CREATE TABLE`, DynamoDB key
-  schema, Cassandra CQL).
+- Uma **matriz "consulta → índice"** por sistema mostra qual padrão de acesso atinge qual chave ou índice. Esta
+  é a lacuna mais comum em entrevistas.
+- Avisos de partição quente (hot-partition) calculados a partir do modelo de capacidade (por exemplo, a partição de uma celebridade excedendo
+  a vazão por partição).
+- Definições opcionais de DDL / tabelas geradas por armazenamento (`CREATE TABLE` do PostgreSQL, schema de chaves do DynamoDB,
+  CQL do Cassandra).
 
 ---
 
-## 3. Cloud mapping with real configurations and trade-offs
+## 3. Mapeamento de nuvem com configurações reais e trade-offs
 
-Extend each provider option in `components.ts`:
+Estender cada opção de provedor em `components.ts`:
 
 ```ts
 { name: "Amazon DynamoDB",
@@ -111,44 +109,44 @@ Extend each provider option in `components.ts`:
   lastVerified: "2026-10" }
 ```
 
-- **Compare view:** pick a component and see AWS, GCP, Azure and OSS side by side (configs, limits,
-  managed vs self-hosted operations burden, lock-in level).
-- Per-system **"why this choice"** notes on the nodes where the choice matters.
-- Every row is stamped with `lastVerified`, and the validator flags rows older than 12 months.
+- **Visualização comparativa:** escolha um componente e veja AWS, GCP, Azure e OSS lado a lado (configurações, limites,
+  carga operacional gerenciada vs auto-hospedada, nível de lock-in).
+- Notas de **"por que esta escolha"** por sistema nos nós onde a escolha importa.
+- Cada linha recebe um carimbo `lastVerified`, e o validador sinaliza linhas com mais de 12 meses.
 
 ---
 
-## 4. Security architecture
+## 4. Arquitetura de segurança
 
-**Kind-level controls** (written once): for example, *API gateway* → authentication, rate limiting,
-WAF, request validation; *relational DB* → encryption at rest, TLS, least-privilege roles, private
-subnet; *object storage* → block public access, pre-signed URLs, bucket policies, KMS keys.
+**Controles por tipo** (escritos uma vez): por exemplo, *API gateway* → autenticação, rate limiting,
+WAF, validação de requisição; *BD relacional* → criptografia em repouso, TLS, papéis de menor privilégio, sub-rede
+privada; *armazenamento de objetos* → bloquear acesso público, URLs pré-assinadas, políticas de bucket, chaves KMS.
 
-**System-level section** — new page section *Security*:
-- Identity: OAuth 2.0 / OIDC flows, token lifetimes, service-to-service auth (mTLS or workload
+**Seção por sistema** — nova seção na página *Segurança*:
+- Identidade: fluxos OAuth 2.0 / OIDC, tempos de vida de tokens, autenticação serviço a serviço (mTLS ou workload
   identity).
-- Authorization: RBAC/ABAC model, e.g. owner/editor/viewer for Dropbox folders, merchant scopes for
-  payments.
-- Data classification per store (public / internal / PII / payment), with encryption and retention rules.
-- Secrets management and rotation.
-- Tenant isolation strategy where relevant (row-level, schema-per-tenant, account-per-tenant).
-- Threats: a mini threat model of 3–5 STRIDE-style threats with mitigations.
+- Autorização: modelo RBAC/ABAC, por exemplo, proprietário/editor/leitor para pastas do Dropbox, escopos de lojista para
+  pagamentos.
+- Classificação de dados por armazenamento (público / interno / PII / pagamento), com regras de criptografia e retenção.
+- Gerenciamento e rotação de segredos.
+- Estratégia de isolamento de locatários (multi-tenant) onde relevante (nível de linha, schema por locatário, conta por locatário).
+- Ameaças: um mini modelo de ameaças com 3–5 ameaças no estilo STRIDE e suas mitigações.
 
-**Diagram security overlay**: a toggle draws trust boundaries (internet / DMZ / private / PCI zone),
-lock icons on encrypted connections and data-classification badges on stores.
+**Sobreposição de segurança no diagrama**: um alternador desenha fronteiras de confiança (internet / DMZ / privada / zona PCI),
+ícones de cadeado em conexões criptografadas e selos de classificação de dados nos armazenamentos.
 
-**Provider mapping** for identity: AWS IAM roles · GCP service accounts / Workload Identity · Azure
-Managed Identities · OSS SPIFFE/SPIRE; secrets: Secrets Manager · Secret Manager · Key Vault ·
-OpenBao/Vault. Most of these kinds already exist in the catalogue.
+**Mapeamento de provedores** para identidade: AWS IAM roles · GCP service accounts / Workload Identity · Azure
+Managed Identities · OSS SPIFFE/SPIRE; segredos: Secrets Manager · Secret Manager · Key Vault ·
+OpenBao/Vault. A maioria desses tipos já existe no catálogo.
 
-**New concepts**: OAuth/OIDC, least-privilege IAM, RBAC vs ABAC, envelope encryption, mTLS / zero
-trust, tenant isolation, secrets rotation.
+**Novos conceitos**: OAuth/OIDC, IAM de menor privilégio, RBAC vs ABAC, criptografia de envelope, mTLS / zero
+trust, isolamento de locatários, rotação de segredos.
 
 ---
 
-## 5. Reliability: SLOs and the failure simulator
+## 5. Confiabilidade: SLOs e o simulador de falhas
 
-**Reliability section per system**
+**Seção de confiabilidade por sistema**
 ```ts
 reliability: {
   slos: [{ sli: "Playback start success", target: "99.95%", window: "30d" },
@@ -157,60 +155,60 @@ reliability: {
   deployment: "Multi-AZ; active-passive region",
 }
 ```
-- Error-budget explainer (99.95% ≈ 21.6 min/month), computed from the target.
+- Explicador de orçamento de erros (error budget) (99,95% ≈ 21,6 min/mês), calculado a partir da meta.
 
-**Failure simulator** — the standout feature:
-- **Kind-level failure templates:** *cache down* → callers fall through to the DB, load × (1/miss rate);
-  *DB primary down* → writes fail until failover (RTO), reads continue on replicas; *event-stream lag*
-  → async consumers delayed, producers unaffected; *CDN miss storm* → origin egress spikes;
-  *AZ failure* → nodes in that zone are lost; *network partition* → splits the graph.
-- **Propagation** computed on the existing graph: walk upstream from the failed node along
-  synchronous edges (`https`, `grpc`, `ws`) to find user-facing impact; async edges (`async`, `stream`)
-  stop the cascade and show "queue growing" instead. No hand-written cascade is needed per system.
-- **UI:** a "Break something" menu on the diagram. Failed nodes turn red, affected paths turn amber,
-  queues pulse, and a side panel lists user impact, which SLOs burn, and recommended mitigations
-  (circuit breaker, replica, fallback, multi-AZ), each linking to a concept page.
-- **"Fix it" toggle:** apply a mitigation and re-run the simulation to show the improvement.
-- Uses capacity outputs to quantify impact ("DB receives 120k req/s instead of 6k").
-
----
-
-## 6. Cloud cost estimator
-
-- **Kind-level pricing units:** compute per vCPU-hour, storage per GB-month, requests per million,
-  egress per GB, managed DB per instance-hour, and so on, for AWS, GCP and Azure, plus an OSS model
-  (raw compute + storage + an "ops overhead" factor in engineer-hours).
-- **Monthly estimate** = capacity sizing × unit prices, shown per component and per provider, as a
-  **range** (low/high), never a single precise figure.
-- Charts: stacked bar per provider; the top 3 cost drivers highlighted (usually egress/CDN,
-  storage, compute).
-- Savings tips per kind: reserved or committed use, tiered storage, CDN offload, right-sizing, spot
-  workers for transcoding.
-- **Data source:** a curated `pricing.ts` snapshot with a `lastVerified` date first. Later, a build-time
-  script refreshes it from the public price APIs (AWS Price List, Azure Retail Prices, GCP Cloud
-  Billing Catalog), keeping the site static.
-- Clear disclaimer: region, discounts and data transfer vary; the numbers are for comparing designs,
-  not budgeting.
+**Simulador de falhas** — a funcionalidade de destaque:
+- **Modelos de falha por tipo:** *cache fora do ar* → chamadores caem direto no BD, carga × (1/taxa de miss);
+  *primário do BD fora do ar* → escritas falham até o failover (RTO), leituras continuam nas réplicas; *atraso no event-stream*
+  → consumidores assíncronos atrasados, produtores não afetados; *tempestade de misses na CDN* → tráfego de saída na origem dispara;
+  *falha de AZ* → nós naquela zona são perdidos; *partição de rede* → divide o grafo.
+- **Propagação** calculada no grafo existente: percorrer a montante (upstream) a partir do nó com falha ao longo das
+  arestas síncronas (`https`, `grpc`, `ws`) para encontrar o impacto visível ao usuário; arestas assíncronas (`async`, `stream`)
+  interrompem a cascata e mostram "fila crescendo" em vez disso. Nenhuma cascata escrita à mão é necessária por sistema.
+- **Interface (UI):** um menu "Quebrar algo" no diagrama. Nós com falha ficam vermelhos, caminhos afetados ficam âmbar,
+  filas pulsam e um painel lateral lista o impacto para o usuário, quais SLOs são consumidos e as mitigações recomendadas
+  (circuit breaker, réplica, fallback, multi-AZ), cada uma apontando para uma página de conceito.
+- **Alternador "Corrigir":** aplique uma mitigação e execute novamente a simulação para mostrar a melhoria.
+- Usa as saídas de capacidade para quantificar o impacto ("o BD recebe 120 mil req/s em vez de 6 mil").
 
 ---
 
-## 7. Observability
+## 6. Estimador de custos em nuvem
 
-- **Kind-level golden signals:** for example, *service* → latency, traffic, errors, saturation;
-  *event stream* → consumer lag, partition skew; *cache* → hit ratio, evictions, memory;
-  *relational DB* → replication lag, connections, slow queries.
-- **Per-system section:** key dashboards, top 5 alerts (symptom-based, tied to SLOs), log fields to
-  capture, and a correlation-id strategy.
-- **Trace view of walkthroughs:** each flow step gets a latency budget, and the walkthrough also
-  renders as a distributed-trace waterfall, which teaches tracing and shows where time goes.
-- Provider mapping already exists (CloudWatch/X-Ray · Cloud Monitoring/Trace · Azure Monitor ·
-  Prometheus/Grafana/OpenTelemetry/Jaeger); add example alert rules and OTel config snippets.
+- **Unidades de preço por tipo:** computação por vCPU-hora, armazenamento por GB-mês, requisições por milhão,
+  tráfego de saída (egress) por GB, BD gerenciado por instância-hora, e assim por diante, para AWS, GCP e Azure, além de um modelo OSS
+  (computação bruta + armazenamento + um fator de "sobrecarga operacional" em horas de engenheiro).
+- **Estimativa mensal** = dimensionamento de capacidade × preços unitários, mostrada por componente e por provedor, como uma
+  **faixa** (mínimo/máximo), nunca um valor único exato.
+- Gráficos: barra empilhada por provedor; os 3 maiores geradores de custo destacados (geralmente egress/CDN,
+  armazenamento, computação).
+- Dicas de economia por tipo: uso reservado ou comprometido, armazenamento em camadas (tiered storage), offload para CDN, right-sizing, workers
+  spot para transcodificação.
+- **Fonte de dados:** primeiro um snapshot curado em `pricing.ts` com uma data `lastVerified`. Posteriormente, um script em tempo de build
+  o atualiza a partir das APIs públicas de preços (AWS Price List, Azure Retail Prices, GCP Cloud
+  Billing Catalog), mantendo o site estático.
+- Aviso claro: região, descontos e transferência de dados variam; os números servem para comparar designs,
+  não para fazer orçamento.
 
 ---
 
-## 8. Interview preparation
+## 7. Observabilidade
 
-Per system:
+- **Golden signals por tipo:** por exemplo, *serviço* → latência, tráfego, erros, saturação;
+  *event stream* → atraso do consumidor (consumer lag), desequilíbrio de partição; *cache* → taxa de acerto (hit ratio), remoções (evictions), memória;
+  *BD relacional* → atraso de replicação, conexões, consultas lentas.
+- **Seção por sistema:** painéis principais, top 5 alertas (baseados em sintomas, vinculados aos SLOs), campos de log para
+  capturar e uma estratégia de correlation-id.
+- **Visualização de trace dos fluxos passo a passo:** cada passo do fluxo ganha um orçamento de latência, e o passo a passo também
+  é renderizado como uma cascata de trace distribuído (waterfall), o que ensina tracing e mostra para onde vai o tempo.
+- O mapeamento de provedores já existe (CloudWatch/X-Ray · Cloud Monitoring/Trace · Azure Monitor ·
+  Prometheus/Grafana/OpenTelemetry/Jaeger); adicionar exemplos de regras de alerta e trechos de configuração do OTel.
+
+---
+
+## 8. Preparação para entrevistas
+
+Por sistema:
 ```ts
 interview: {
   questions: [
@@ -222,71 +220,71 @@ interview: {
   rubric: { requirements: …, estimates: …, dataModel: …, scaling: …, tradeoffs: … },
 }
 ```
-- **Mock interview mode:** a 45-minute timer with the standard phases (clarify → estimate → API →
-  data → design → deep dive → wrap-up), hints revealed in a ladder, and a self-scoring rubric.
-- **Flashcards** generated from concepts and bottlenecks; "explain this diagram in 2 minutes" drills.
-- Progress (questions attempted, scores) stored locally in the browser.
+- **Modo de entrevista simulada:** um cronômetro de 45 minutos com as fases padrão (esclarecer → estimar → API →
+  dados → design → aprofundamento → conclusão), dicas reveladas progressivamente e uma rubrica de autoavaliação.
+- **Flashcards** gerados a partir de conceitos e gargalos; exercícios de "explique este diagrama em 2 minutos".
+- Progresso (perguntas tentadas, pontuações) armazenado localmente no navegador.
 
 ---
 
-## 9. Implementation mode
+## 9. Modo de implementação
 
-Don't attempt 36 systems × 4 languages. Instead:
+Não tente fazer 36 sistemas × 4 linguagens. Em vez disso:
 
-- **A separate repo `system-design-labs`**, linked from the site, with **reference implementations for
-  4–5 flagship systems** chosen to cover different patterns:
-  | System | Pattern it teaches | Primary stack |
+- **Um repositório separado `system-design-labs`**, vinculado a partir do site, com **implementações de referência para
+  4–5 sistemas principais** escolhidos para cobrir diferentes padrões:
+  | Sistema | Padrão que ensina | Stack principal |
   |---|---|---|
-  | URL shortener | IDs, caching, KV store | Go |
+  | Encurtador de URL | IDs, caching, armazenamento KV | Go |
   | Rate limiter | Redis + Lua, middleware | Node.js (TypeScript) |
-  | Chat (WhatsApp) | WebSockets, pub/sub, offline delivery | Go |
-  | Checkout saga (Amazon) | Saga, idempotency, outbox | Java/Spring Boot |
-  | Payment ledger | Double-entry, idempotent APIs | Python/FastAPI |
-- Each lab includes `docker-compose.yml` (Postgres, Redis, Redpanda/Kafka, MinIO), tests, k8s
-  manifests or a Helm chart, and optional Terraform modules per cloud that reuse the component →
-  provider mapping.
-- **Exercises:** "add a cache and measure p99", "kill Redis and observe the fallback", "shard the
-  table" — linked from the failure simulator and the capacity calculator.
-- On the site: a **Code tab** on each flow step showing the relevant snippet in the chosen language,
-  pulled from the labs repo at build time so it never drifts.
+  | Chat (WhatsApp) | WebSockets, pub/sub, entrega offline | Go |
+  | Saga de checkout (Amazon) | Saga, idempotência, outbox | Java/Spring Boot |
+  | Livro-razão de pagamentos | Partidas dobradas, APIs idempotentes | Python/FastAPI |
+- Cada laboratório inclui `docker-compose.yml` (Postgres, Redis, Redpanda/Kafka, MinIO), testes, manifestos k8s
+  ou um gráfico Helm, e módulos Terraform opcionais por nuvem que reutilizam o mapeamento componente →
+  provedor.
+- **Exercícios:** "adicione um cache e meça o p99", "derrube o Redis e observe o fallback", "faça sharding da
+  tabela" — vinculados a partir do simulador de falhas e da calculadora de capacidade.
+- No site: uma **aba de Código** em cada passo do fluxo mostrando o trecho relevante na linguagem escolhida,
+  extraído do repositório de laboratórios em tempo de build para que nunca fique defasado.
 
 ---
 
-## 10. Deeper architecture (cross-cutting)
+## 10. Arquitetura mais profunda (transversal)
 
-- **Zoomable diagrams:** a high-level view (current) with "expand" on a node to show its internals
-  (e.g. the matching service's candidate search → ETA ranking → lock → offer pipeline).
-- **Sequence diagrams** generated from each flow (Mermaid), alongside the animated walkthrough.
-- **Decision records:** 2–3 "we chose X over Y because…" ADR cards per flagship system.
-- **Evolution view:** v1 (monolith + one DB) → v2 (cache + replicas) → v3 (sharded, multi-region), so
-  learners see *why* each component exists.
+- **Diagramas com zoom:** uma visualização de alto nível (atual) com "expandir" em um nó para mostrar seu funcionamento interno
+  (por exemplo, o pipeline de busca de candidatos → ranqueamento por ETA → lock → oferta do serviço de pareamento).
+- **Diagramas de sequência** gerados a partir de cada fluxo (Mermaid), ao lado do passo a passo animado.
+- **Registros de decisão (ADRs):** 2–3 cards de ADR "escolhemos X em vez de Y porque…" para cada sistema principal.
+- **Visualização de evolução:** v1 (monólito + um BD) → v2 (cache + réplicas) → v3 (com sharding, multi-região), para que
+  os estudantes vejam *por que* cada componente existe.
 
 ---
 
-## Prioritised roadmap
+## Roteiro priorizado
 
-| # | Feature | Why now | Effort (flagship 10 + kind defaults) |
+| # | Funcionalidade | Por que agora | Esforço (10 principais + padrões por tipo) |
 |---|---|---|---|
-| 1 | Capacity calculator | Foundation for cost, sizing and simulation; high engagement | 4–5 days |
-| 2 | DB design depth + reliability/SLO fields | Content depth interviewers probe most | 4–6 days |
-| 3 | Failure simulator | Signature feature; reuses graph + capacity | 6–8 days |
-| 4 | Security + observability sections and overlays | Closes the biggest content gaps | 6–8 days |
-| 5 | Interview mode | Strong learning value, mostly content | 4–5 days |
-| 6 | Cost estimator | Needs capacity + sizing; pricing data must be maintained | 5–7 days |
-| 7 | Cloud configs & trade-offs, compare view | Builds on the catalogue | 3–4 days |
-| 8 | Implementation labs repo | Largest scope; run in parallel with the above | 2–3 weeks for 5 labs |
-| 9 | Zoomable diagrams, sequence diagrams, evolution view | Polish on top of depth | 5–7 days |
+| 1 | Calculadora de capacidade | Base para custo, dimensionamento e simulação; alto engajamento | 4–5 dias |
+| 2 | Profundidade em design de BD + campos de confiabilidade/SLO | Profundidade de conteúdo que entrevistadores mais exploram | 4–6 dias |
+| 3 | Simulador de falhas | Funcionalidade de destaque; reutiliza grafo + capacidade | 6–8 dias |
+| 4 | Seções e sobreposições de segurança + observabilidade | Fecha as maiores lacunas de conteúdo | 6–8 dias |
+| 5 | Modo de entrevista | Forte valor de aprendizado, majoritariamente conteúdo | 4–5 dias |
+| 6 | Estimador de custos | Precisa de capacidade + dimensionamento; dados de preços precisam ser mantidos | 5–7 dias |
+| 7 | Configurações de nuvem e trade-offs, visualização comparativa | Constrói sobre o catálogo | 3–4 dias |
+| 8 | Repositório de laboratórios de implementação | Maior escopo; executar em paralelo com os itens acima | 2–3 semanas para 5 labs |
+| 9 | Diagramas com zoom, diagramas de sequência, visualização de evolução | Refinamento sobre a profundidade | 5–7 dias |
 
-Rollout: each feature ships first for the 10 flagship systems plus kind-level defaults for all 36,
-then deepens system by system. Combine with Phases 1–3 of `REDESIGN_PLAN.md` so the new panels land
-in the redesigned system workspace rather than being added to the current long page.
+Lançamento: cada funcionalidade é entregue primeiro para os 10 sistemas principais mais os padrões por tipo para todos os 36,
+e depois se aprofunda sistema por sistema. Combinar com as Fases 1–3 de `REDESIGN_PLAN.md` para que os novos painéis entrem
+no espaço de trabalho do sistema redesenhado, em vez de serem adicionados à página longa atual.
 
-## Risks and how to handle them
+## Riscos e como lidar com eles
 
-| Risk | Mitigation |
+| Risco | Mitigação |
 |---|---|
-| Cost numbers look precise but are wrong | Show ranges, date-stamp prices, add a disclaimer, frame as comparison |
-| Content volume explodes | Kind-level defaults first; flagships deep, others shallow-but-correct |
-| Simulator oversimplifies | Label it as a model; show the rule used ("sync edge → impact propagates") |
-| Cloud facts go stale | `lastVerified` on every provider row and price; validator warns after 12 months |
-| Labs drift from the site | Pull snippets from the labs repo at build time; CI runs the labs' tests |
+| Números de custo parecem precisos, mas estão errados | Mostrar faixas, datar os preços, adicionar aviso de isenção, apresentar como comparação |
+| Volume de conteúdo explode | Padrões por tipo primeiro; sistemas principais profundos, outros superficiais porém corretos |
+| Simulador simplifica demais | Rotulá-lo como um modelo; mostrar a regra usada ("aresta síncrona → o impacto se propaga") |
+| Fatos da nuvem ficam desatualizados | `lastVerified` em cada linha de provedor e preço; validador avisa após 12 meses |
+| Laboratórios se distanciam do site | Extrair trechos do repositório de labs em tempo de build; CI executa os testes dos labs |

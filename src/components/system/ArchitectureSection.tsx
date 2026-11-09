@@ -98,7 +98,7 @@ export default function ArchitectureSection({ system }: { system: SystemDesign }
           <div
             ref={modeRef}
             role="tablist"
-            aria-label="Diagram mode"
+            aria-label="Modo do diagrama"
             className="relative flex rounded-lg bg-surface-2 p-0.5"
           >
             {modeBox && (
@@ -109,10 +109,10 @@ export default function ArchitectureSection({ system }: { system: SystemDesign }
               />
             )}
             {[
-              { id: "architecture", label: "Architecture", active: !activeFlow, onClick: () => selectFlow(null) },
+              { id: "architecture", label: "Arquitetura", active: !activeFlow, onClick: () => selectFlow(null) },
               {
                 id: "walkthrough",
-                label: "Walkthrough",
+                label: "Passo a passo",
                 active: Boolean(activeFlow),
                 onClick: () => !activeFlow && selectFlow(system.flows[0].id),
               },
@@ -164,13 +164,13 @@ export default function ArchitectureSection({ system }: { system: SystemDesign }
 
       {!isDesktop && (
         <div className="flex items-center justify-between border-b border-line px-4 py-2">
-          <span className="text-xs text-muted">Tap a component for details</span>
+          <span className="text-xs text-muted">Toque em um componente para ver os detalhes</span>
           <button
             type="button"
             onClick={() => setPreferDiagram(!preferDiagram)}
             className="rounded-lg border border-line-strong px-2.5 py-1 text-xs font-medium text-fg-soft hover:border-line-strong"
           >
-            {preferDiagram ? "Show as list" : "Show diagram"}
+            {preferDiagram ? "Mostrar como lista" : "Mostrar diagrama"}
           </button>
         </div>
       )}
@@ -219,11 +219,11 @@ export default function ArchitectureSection({ system }: { system: SystemDesign }
       {activeFlow && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-amber-500/30 bg-amber-500/5 px-4 py-3">
           <div className="flex shrink-0 items-center gap-1">
-            <IconButton label="Previous step" disabled={step === 0} onClick={() => goToStep(step - 1)}>
+            <IconButton label="Passo anterior" disabled={step === 0} onClick={() => goToStep(step - 1)}>
               <ChevronLeft size={16} />
             </IconButton>
             <IconButton
-              label={playing ? "Pause" : "Play"}
+              label={playing ? "Pausar" : "Reproduzir"}
               onClick={() => {
                 if (!playing && step === activeFlow.steps.length - 1) goToStep(0);
                 setPlaying(!playing);
@@ -232,13 +232,13 @@ export default function ArchitectureSection({ system }: { system: SystemDesign }
               {playing ? <Pause size={16} /> : <Play size={16} />}
             </IconButton>
             <IconButton
-              label="Next step"
+              label="Próximo passo"
               disabled={step === activeFlow.steps.length - 1}
               onClick={() => goToStep(step + 1)}
             >
               <ChevronRight size={16} />
             </IconButton>
-            <IconButton label="Restart" onClick={() => goToStep(0)}>
+            <IconButton label="Reiniciar" onClick={() => goToStep(0)}>
               <RotateCcw size={14} />
             </IconButton>
           </div>
@@ -248,7 +248,7 @@ export default function ArchitectureSection({ system }: { system: SystemDesign }
             </span>
             {activeFlow.steps[step].text}
           </p>
-          <IconButton label="Close walkthrough" onClick={() => selectFlow(null)}>
+          <IconButton label="Fechar passo a passo" onClick={() => selectFlow(null)}>
             <X size={16} />
           </IconButton>
         </div>

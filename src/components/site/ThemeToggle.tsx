@@ -6,9 +6,9 @@ import { useSlidingIndicator } from "@/lib/useSlidingIndicator";
 import { applyThemeMode, readThemeMode, subscribeTheme, type ThemeMode } from "@/lib/theme";
 
 const options: { mode: ThemeMode; label: string; icon: typeof Sun }[] = [
-  { mode: "light", label: "Light", icon: Sun },
-  { mode: "dark", label: "Dark", icon: Moon },
-  { mode: "system", label: "System", icon: Monitor },
+  { mode: "light", label: "Claro", icon: Sun },
+  { mode: "dark", label: "Escuro", icon: Moon },
+  { mode: "system", label: "Sistema", icon: Monitor },
 ];
 
 /** `compact` shows icons only (for the top bar); labels stay available to screen readers. */
@@ -17,7 +17,7 @@ export default function ThemeToggle({ compact = false }: { compact?: boolean }) 
   const { ref, box } = useSlidingIndicator<HTMLDivElement>(options.findIndex((o) => o.mode === mode));
 
   return (
-    <div ref={ref} role="radiogroup" aria-label="Theme" className="relative flex rounded-lg border border-line bg-surface p-0.5">
+    <div ref={ref} role="radiogroup" aria-label="Tema" className="relative flex rounded-lg border border-line bg-surface p-0.5">
       {box && (
         <span
           aria-hidden

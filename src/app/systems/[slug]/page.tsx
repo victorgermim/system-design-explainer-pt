@@ -15,7 +15,7 @@ export async function generateMetadata(props: PageProps<"/systems/[slug]">): Pro
   const system = getSystem(slug);
   if (!system) return {};
   return {
-    title: `${system.name} system design · System Design Explainer`,
+    title: `System design do ${system.name} · System Design Explainer`,
     description: `${system.tagline}. ${system.description}`,
   };
 }

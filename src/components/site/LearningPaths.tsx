@@ -21,7 +21,7 @@ function ProgressRing({ done, total }: { done: number; total: number }) {
       viewBox="0 0 36 36"
       className="h-10 w-10 -rotate-90"
       role="img"
-      aria-label={`${done} of ${total} visited`}
+      aria-label={`${done} de ${total} visitados`}
     >
       <circle cx="18" cy="18" r={r} fill="none" stroke="var(--line)" strokeWidth="3" />
       <circle
@@ -73,7 +73,7 @@ export default function LearningPaths({ paths }: { paths: LearningPath[] }) {
                             : "bg-surface-2 text-muted group-hover:bg-cat-tint group-hover:text-fg"
                         }`}
                       >
-                        {seen ? <Check size={13} aria-label="Visited" /> : i + 1}
+                        {seen ? <Check size={13} aria-label="Visitado" /> : i + 1}
                       </span>
                       <span className="text-fg-soft group-hover:text-fg">{s.name}</span>
                     </Link>

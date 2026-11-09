@@ -26,12 +26,12 @@ export interface TierNodeData extends Record<string, unknown> {
 type Protocol = NonNullable<SystemEdge["protocol"]> | "default";
 
 export const edgeStyles: Record<Protocol, { label: string; color: string; dash?: string; animated?: boolean }> = {
-  default: { label: "Request (HTTPS)", color: "#64748b" },
-  https: { label: "Request (HTTPS)", color: "#64748b" },
-  grpc: { label: "Internal RPC (gRPC)", color: "#0ea5e9" },
-  ws: { label: "Persistent connection (WebSocket)", color: "#22c55e" },
-  async: { label: "Async message / job", color: "#a855f7", dash: "6 4", animated: true },
-  stream: { label: "Event stream", color: "#14b8a6", dash: "6 4", animated: true },
+  default: { label: "Requisição (HTTPS)", color: "#64748b" },
+  https: { label: "Requisição (HTTPS)", color: "#64748b" },
+  grpc: { label: "RPC interno (gRPC)", color: "#0ea5e9" },
+  ws: { label: "Conexão persistente (WebSocket)", color: "#22c55e" },
+  async: { label: "Mensagem / job assíncrono", color: "#a855f7", dash: "6 4", animated: true },
+  stream: { label: "Stream de eventos", color: "#14b8a6", dash: "6 4", animated: true },
   cdc: { label: "Change data capture", color: "#f97316", dash: "2 4" },
 };
 

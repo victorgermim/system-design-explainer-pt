@@ -1,9 +1,9 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+# Este NÃO é o Next.js que você conhece
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+Esta versão possui mudanças que quebram compatibilidade (breaking changes) — APIs, convenções e estrutura de arquivos podem diferir dos seus dados de treinamento. Leia o guia relevante em `node_modules/next/dist/docs/` (resolvido a partir do diretório deste arquivo; em monorepos o pacote `next` pode não estar visível a partir da raiz do repositório) antes de escrever qualquer código. Preste atenção aos avisos de descontinuação (deprecation notices).
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+Este bloco é gravado e readicionado por `next dev` — verifique em `node_modules/next/dist/server/lib/generate-agent-files.js`. Removê-lo de um diff apenas recria a alteração não commitada; commitá-lo junto com o seu trabalho mantém a árvore limpa.
 
 <!-- END:nextjs-agent-rules -->

@@ -66,30 +66,30 @@ export default function SystemCatalogue({
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Filter systems…"
+            placeholder="Filtrar sistemas…"
             className="h-9 w-44 bg-transparent text-sm text-fg placeholder:text-muted focus:outline-none"
           />
         </label>
 
-        <ChipGroup options={categories} value={category} onChange={setCategory} allLabel="All categories" categoryDots />
+        <ChipGroup options={categories} value={category} onChange={setCategory} allLabel="Todas as categorias" categoryDots />
         <ChipGroup
           options={[
-            { value: "1", label: "Beginner" },
-            { value: "2", label: "Intermediate" },
-            { value: "3", label: "Advanced" },
+            { value: "1", label: "Iniciante" },
+            { value: "2", label: "Intermediário" },
+            { value: "3", label: "Avançado" },
           ]}
           value={difficulty ? String(difficulty) : null}
           onChange={(v) => setDifficulty(v ? Number(v) : null)}
-          allLabel="Any level"
+          allLabel="Qualquer nível"
         />
 
         <select
           value={concept}
           onChange={(e) => setConcept(e.target.value)}
-          aria-label="Filter by concept"
+          aria-label="Filtrar por conceito"
           className="h-9 rounded-lg border border-line-strong bg-surface px-3 text-sm text-fg-soft focus:outline-none"
         >
-          <option value="">Any concept</option>
+          <option value="">Qualquer conceito</option>
           {conceptOptions.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
@@ -108,13 +108,13 @@ export default function SystemCatalogue({
             }}
             className="text-xs text-muted underline-offset-2 hover:text-fg hover:underline"
           >
-            Clear filters
+            Limpar filtros
           </button>
         )}
       </div>
 
       <p className="mt-4 text-xs text-muted">
-        {visible.length} of {cards.length} systems
+        {visible.length} de {cards.length} sistemas
       </p>
 
       <ul className="mt-3 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -158,7 +158,7 @@ export default function SystemCatalogue({
                     {card.difficultyLabel}
                   </span>
                   <span className="text-muted">
-                    {card.componentCount} components · {card.flowCount} walkthroughs
+                    {card.componentCount} componentes · {card.flowCount} fluxos passo a passo
                   </span>
                 </div>
               </div>
@@ -170,7 +170,7 @@ export default function SystemCatalogue({
       {visible.length === 0 && (
         <div className="mt-10 flex flex-col items-center gap-3 text-center">
           <EmptyIllustration />
-          <p className="text-sm text-muted">No systems match these filters.</p>
+          <p className="text-sm text-muted">Nenhum sistema corresponde a esses filtros.</p>
         </div>
       )}
     </>

@@ -1,7 +1,7 @@
 import { ogCard, ogSize } from "@/lib/og";
 import { getConcept, getSystem, systemCategoryLabels, systems } from "@/content";
 
-export const alt = "System design overview";
+export const alt = "Visão geral do system design";
 export const size = ogSize;
 export const contentType = "image/png";
 // Rendered once at build time for the static export.

@@ -1,193 +1,193 @@
-# Visual Refresh Plan — "More vibrant"
+# Plano de Renovação Visual — "Mais vibrante"
 
-The layout redesign (REDESIGN_PLAN.md, v2) fixed structure: top nav, split workspace, landing page.
-What's left is **mood**: nearly every surface is the same white / near-black card with a grey border
-and a single indigo accent, so all 36 systems, 27 concepts and 36 components look alike. This plan
-adds colour identity, depth, imagery and motion — without hurting readability or accessibility.
-
----
-
-## 1. Goals and guardrails
-
-**Goals**
-1. Every area has a recognisable colour identity (category, concept family, diagram tier).
-2. Pages have visual rhythm — not one long column of identical card grids.
-3. The diagram, the product's core, is the most colourful, alive element on screen.
-4. Interactions give satisfying feedback.
-
-**Guardrails**
-- Colour lives in **tints, edges, icons and backgrounds**; body text stays neutral (WCAG AA ≥ 4.5:1 in
-  both themes, checked with axe in CI).
-- Colour is never the only signal — always paired with a label or icon.
-- Max palette: brand accent + 5 category hues + 5 concept-family hues (shared hues allowed).
-- All motion respects `prefers-reduced-motion`.
-- No new runtime dependencies for colour/gradients; motion via CSS first, JS only where needed.
+O redesign de layout (REDESIGN_PLAN.md, v2) corrigiu a estrutura: navegação superior, espaço de trabalho dividido, página inicial.
+O que falta é **atmosfera**: quase toda superfície é o mesmo card branco / quase preto com uma borda cinza
+e um único destaque em índigo, de modo que todos os 36 sistemas, 27 conceitos e 36 componentes parecem iguais. Este plano
+adiciona identidade de cores, profundidade, imagens e movimento — sem prejudicar a legibilidade ou a acessibilidade.
 
 ---
 
-## 2. Colour system
+## 1. Objetivos e diretrizes
 
-### 2.1 Brand
-| Token | Light | Dark | Use |
+**Objetivos**
+1. Cada área tem uma identidade de cor reconhecível (categoria, família de conceitos, camada do diagrama).
+2. As páginas têm ritmo visual — não uma longa coluna de grades de cards idênticos.
+3. O diagrama, núcleo do produto, é o elemento mais colorido e vivo na tela.
+4. As interações oferecem um feedback satisfatório.
+
+**Diretrizes (Guardrails)**
+- A cor vive em **tons suaves (tints), bordas, ícones e planos de fundo**; o texto do corpo permanece neutro (WCAG AA ≥ 4,5:1 em
+  ambos os temas, verificado com axe no CI).
+- A cor nunca é o único sinal — sempre acompanhada de um rótulo ou ícone.
+- Paleta máxima: cor de destaque da marca + 5 matizes de categoria + 5 matizes de família de conceitos (matizes compartilhados são permitidos).
+- Todo movimento respeita `prefers-reduced-motion`.
+- Sem novas dependências em tempo de execução para cores/gradientes; movimento via CSS primeiro, JS apenas onde necessário.
+
+---
+
+## 2. Sistema de cores
+
+### 2.1 Marca
+| Token | Claro | Escuro | Uso |
 |---|---|---|---|
-| `--accent` | `#4F46E5` | `#818CF8` | Links, focus, primary buttons |
-| `--accent-2` | `#7C3AED` | `#A78BFA` | Gradient partner |
-| `--accent-3` | `#0891B2` | `#22D3EE` | Gradient partner |
-| `--gradient-brand` | `linear-gradient(135deg, accent, accent-2 50%, accent-3)` | same | Hero word, primary buttons, logo |
+| `--accent` | `#4F46E5` | `#818CF8` | Links, foco, botões primários |
+| `--accent-2` | `#7C3AED` | `#A78BFA` | Parceiro de gradiente |
+| `--accent-3` | `#0891B2` | `#22D3EE` | Parceiro de gradiente |
+| `--gradient-brand` | `linear-gradient(135deg, accent, accent-2 50%, accent-3)` | mesmo | Palavra do hero, botões primários, logo |
 
-### 2.2 Category identity (systems)
-Each category gets one hue used as **solid** (icons, edges), **tint** (8–12% backgrounds) and
-**glow** (hover/active shadows).
+### 2.2 Identidade de categoria (sistemas)
+Cada categoria recebe um matiz usado como **sólido** (ícones, bordas), **tom suave (tint)** (fundos de 8–12%) e
+**brilho (glow)** (sombras em hover/ativo).
 
-| Category | Hue | Solid (light / dark) | Tint |
+| Categoria | Matiz | Sólido (claro / escuro) | Tom suave (Tint) |
 |---|---|---|---|
-| Media & Social | Rose | `#E11D48` / `#FB7185` | rose 8% / 14% |
-| Mobility & Logistics | Amber | `#D97706` / `#FBBF24` | amber 10% / 14% |
-| Commerce & Fintech | Emerald | `#059669` / `#34D399` | emerald 8% / 14% |
-| Bookings & Marketplaces | Violet | `#7C3AED` / `#A78BFA` | violet 8% / 14% |
-| Building Blocks | Sky | `#0284C7` / `#38BDF8` | sky 8% / 14% |
+| Mídia e Social | Rosa (Rose) | `#E11D48` / `#FB7185` | rose 8% / 14% |
+| Mobilidade e Logística | Âmbar (Amber) | `#D97706` / `#FBBF24` | amber 10% / 14% |
+| Comércio e Fintech | Esmeralda (Emerald) | `#059669` / `#34D399` | emerald 8% / 14% |
+| Reservas e Marketplaces | Violeta (Violet) | `#7C3AED` / `#A78BFA` | violet 8% / 14% |
+| Blocos de Construção | Céu (Sky) | `#0284C7` / `#38BDF8` | sky 8% / 14% |
 
-Exposed as `--cat-{id}`, `--cat-{id}-tint`, `--cat-{id}-glow`, set per page on a wrapper
-(`data-category="mobility"`) so components just use `--cat`, `--cat-tint`, `--cat-glow`.
+Expostos como `--cat-{id}`, `--cat-{id}-tint`, `--cat-{id}-glow`, definidos por página em um wrapper
+(`data-category="mobility"`) para que os componentes usem apenas `--cat`, `--cat-tint`, `--cat-glow`.
 
-### 2.3 Concept families
-| Family | Hue | Concepts |
+### 2.3 Famílias de conceitos
+| Família | Matiz | Conceitos |
 |---|---|---|
-| Data & storage | Blue | caching, sharding, read replicas, search indexing, CDC, ledger |
-| Scale & distribution | Orange | horizontal scaling, consistent hashing, multi-region, geospatial, IDs, Bloom filters, tries |
-| Messaging & flow | Purple | event-driven, fan-out, back-pressure, websockets, saga, ABR streaming, pre-signed uploads, WebRTC |
-| Reliability & correctness | Green | idempotency, distributed locks, leader election, rate limiting, microservices |
-| Security | Red | authentication (+ future security concepts) |
+| Dados e armazenamento | Azul | caching, sharding, read replicas, indexação de busca, CDC, livro-razão |
+| Escala e distribuição | Laranja | escalabilidade horizontal, consistent hashing, multi-região, geoespacial, IDs, filtros de Bloom, tries |
+| Mensageria e fluxo | Roxo | orientado a eventos, fan-out, back-pressure, websockets, saga, streaming ABR, uploads pré-assinados, WebRTC |
+| Confiabilidade e correção | Verde | idempotência, locks distribuídos, eleição de líder, rate limiting, microsserviços |
+| Segurança | Vermelho | autenticação (+ futuros conceitos de segurança) |
 
-A new `family` field on each concept (validated).
+Um novo campo `family` em cada conceito (validado).
 
-### 2.4 Diagram tiers
-Tier lanes stop being grey; each gets a 6–8% tint and a coloured lane label:
-Clients — slate · Edge & security — blue · Services — green · Async & streaming — purple ·
-Data — pink · Analytics & platform — teal (aligned with existing node category colours).
+### 2.4 Camadas do diagrama
+As raias de camada deixam de ser cinzas; cada uma recebe um tom suave de 6–8% e um rótulo de raia colorido:
+Clientes — ardósia (slate) · Borda e segurança — azul · Serviços — verde · Assíncrono e streaming — roxo ·
+Dados — rosa · Analytics e plataforma — azul-petróleo (teal) (alinhado com as cores de categoria dos nós existentes).
 
-### 2.5 Dark theme upgrade
-- Base moves from flat `#0B0D12` to deep navy `#0A0F1E` with surfaces `#111830` / `#172040`.
-- Two very soft radial glows (accent + category) fixed behind the page at ~6% opacity.
-- Cards get a 1-px top highlight (`rgb(255 255 255 / 0.06)`) for depth.
+### 2.5 Melhoria do tema escuro
+- A base passa do `#0B0D12` chapado para um azul-marinho profundo `#0A0F1E` com superfícies `#111830` / `#172040`.
+- Dois brilhos radiais muito suaves (destaque + categoria) fixos atrás da página com ~6% de opacidade.
+- Os cards ganham um brilho superior de 1 px (`rgb(255 255 255 / 0.06)`) para dar profundidade.
 
 ---
 
-## 3. Depth and texture
+## 3. Profundidade e textura
 
-| Element | Treatment |
+| Elemento | Tratamento |
 |---|---|
-| Hero | Animated mesh gradient (3 blurred blobs drifting over 20 s) + 3% grain overlay; headline word "built?" in `--gradient-brand` text |
-| Header | 1-px gradient bottom border; logo mark filled with brand gradient |
-| Section bands (home) | Alternate: plain → category-tinted → plain → dark band ("Learning paths") → plain |
-| Cards | Soft shadow + 1-px border; on hover lift 2 px and a glow in `--cat-glow` |
-| Interactive visuals | Gradient border (1 px, brand gradient) to signal "play with me" |
-| Section headings | Coloured icon chip + short 32-px gradient underline |
+| Hero | Gradiente em malha (mesh) animado (3 manchas desfocadas flutuando ao longo de 20 s) + sobreposição de granulação de 3%; palavra "construídos?" do título em texto com `--gradient-brand` |
+| Cabeçalho | Borda inferior de 1 px em gradiente; marca do logo preenchida com o gradiente da marca |
+| Faixas de seção (início) | Alternar: simples → tom da categoria → simples → faixa escura ("Trilhas de aprendizado") → simples |
+| Cards | Sombra suave + borda de 1 px; ao passar o mouse, eleva 2 px e aplica um brilho em `--cat-glow` |
+| Visuais interativos | Borda em gradiente (1 px, gradiente da marca) para sinalizar "interaja comigo" |
+| Títulos de seção | Chip de ícone colorido + sublinhado curto de 32 px em gradiente |
 
 ---
 
-## 4. Imagery and icons
+## 4. Imagens e ícones
 
-1. **Diagram thumbnails** on every system card and "Used in / Seen in" list — rendered to SVG at build
-   time from the existing ELK layout (nodes as coloured rounded rects, edges as lines; no text).
-   This alone makes the 36 cards visually distinct.
-2. **System glyphs** — one brand-neutral lucide icon per system (Play for video, Car for ride-hailing,
-   ShoppingCart, MessageCircle, CreditCard, Map, Ticket, Home, Plane …) inside a category-tinted tile.
-3. **Concept family icons** on concept cards and page headers.
-4. **Provider marks** — small coloured provider dots/pills next to service names (logos later, after
-   licence checks).
-5. **Spot illustrations** (simple SVG, two-colour) for 404, empty search results and empty filters.
+1. **Miniaturas de diagrama** em cada card de sistema e lista "Usado em / Visto em" — renderizadas em SVG em tempo de
+   build a partir do layout ELK existente (nós como retângulos arredondados coloridos, arestas como linhas; sem texto).
+   Só isso já torna os 36 cards visualmente distintos.
+2. **Ícones de sistema (glyphs)** — um ícone lucide neutro em relação à marca para cada sistema (Play para vídeo, Car para corridas,
+   ShoppingCart, MessageCircle, CreditCard, Map, Ticket, Home, Plane …) dentro de um bloco com o tom da categoria.
+3. **Ícones de família de conceitos** nos cards de conceitos e cabeçalhos de página.
+4. **Marcas de provedores** — pequenos pontos/pílulas coloridos dos provedores ao lado dos nomes dos serviços (logos posteriormente, após
+   verificação de licenças).
+5. **Ilustrações pontuais** (SVG simples, duas cores) para a página 404, resultados de busca vazios e filtros sem resultados.
 
 ---
 
-## 5. Page-by-page changes
+## 5. Mudanças página por página
 
-### Home
-- Hero: mesh gradient, gradient headline word, hero diagram card with a subtle animated gradient
-  border; stat pills (`36 systems · 36 components · 27 concepts`) as coloured chips.
-- "What you can do": each card gets its own hue and a small looping micro-animation on hover
-  (cloud labels flipping, a dot moving along an edge).
-- Learning paths on a **dark band**: gradient header per path, numbered steps joined by a vertical
-  line, progress ring per path (visited systems stored in localStorage).
-- Catalogue: category filter chips coloured by category; cards with thumbnail, glyph tile,
-  coloured top edge, difficulty pill (green / amber / rose).
+### Início
+- Hero: gradiente em malha, palavra do título em gradiente, card do diagrama no hero com uma borda sutil em gradiente
+  animado; pílulas de estatísticas (`36 sistemas · 36 componentes · 27 conceitos`) como chips coloridos.
+- "O que você pode fazer": cada card ganha seu próprio matiz e uma pequena microanimação em loop ao passar o mouse
+  (rótulos de nuvem alternando, um ponto se movendo ao longo de uma aresta).
+- Trilhas de aprendizado em uma **faixa escura**: cabeçalho em gradiente por trilha, passos numerados unidos por uma linha
+  vertical, anel de progresso por trilha (sistemas visitados salvos no localStorage).
+- Catálogo: chips de filtro de categoria coloridos por categoria; cards com miniatura, bloco de ícone,
+  borda superior colorida, pílula de dificuldade (verde / âmbar / rosa).
 
-### System workspace
-- Header band tinted with the category gradient (tint → transparent), category chip and glyph.
-- Diagram: tinted tier lanes, accent-coloured dot grid, provider-switch "flash" (boxes briefly glow in
-  the provider colour), walkthrough with an animated packet dot along the active edge and a glow on its
-  two endpoints.
-- Tabs: sliding underline in the category colour.
-- Capacity tab: big coloured numbers + log-scale bar per estimate.
-- Data tab: store-type badges (relational blue, wide-column pink, cache red, object amber, search
-  violet).
-- Overview: requirements as icon rows (✓ functional, ⚡ performance, 🛡 reliability).
+### Espaço de trabalho do sistema
+- Faixa de cabeçalho tingida com o gradiente da categoria (tom suave → transparente), chip da categoria e ícone.
+- Diagrama: raias de camada tingidas, grade de pontos na cor de destaque, "flash" na troca de provedor (as caixas brilham brevemente na
+  cor do provedor), passo a passo com um ponto de pacote animado ao longo da aresta ativa e um brilho em suas
+  duas extremidades.
+- Abas: sublinhado deslizante na cor da categoria.
+- Aba Capacidade: números grandes coloridos + barra em escala logarítmica por estimativa.
+- Aba Dados: selos de tipo de armazenamento (relacional azul, wide-column rosa, cache vermelho, objetos âmbar, busca
+  violeta).
+- Visão geral: requisitos como linhas com ícones (✓ funcional, ⚡ desempenho, 🛡 confiabilidade).
 
-### Concepts
-- Index: cards grouped by family with family colour edge and icon; a small family legend at top.
-- Concept page: header band in family colour; "See it in action" visual cards with gradient border;
-  success feedback in visuals (ledger "✓ balanced" pulses green, ring flashes when a server fails).
+### Conceitos
+- Índice: cards agrupados por família com borda e ícone na cor da família; uma pequena legenda de famílias no topo.
+- Página de conceito: faixa de cabeçalho na cor da família; cards visuais "Veja em ação" com borda em gradiente;
+  feedback de sucesso nos visuais (livro-razão "✓ equilibrado" pulsa em verde, anel pisca quando um servidor falha).
 
-### Components
-- Index: category sections with coloured headers; provider columns with coloured header chips.
-- Component page: provider option cards with the provider's colour as left edge.
+### Componentes
+- Índice: seções de categoria com cabeçalhos coloridos; colunas de provedores com chips de cabeçalho coloridos.
+- Página de componente: cards de opções de provedor com a cor do provedor na borda esquerda.
 
 ### Global
-- Buttons: primary = brand gradient, secondary = tinted; subtle press scale (0.98).
-- Segmented controls (provider, mode, theme): sliding pill indicator.
-- Loading: shimmering skeleton diagram instead of "Laying out diagram…".
-- Toast-style feedback for copy-link / share actions (future).
+- Botões: primário = gradiente da marca, secundário = tingido; leve escala ao pressionar (0,98).
+- Controles segmentados (provedor, modo, tema): indicador de pílula deslizante.
+- Carregamento: esqueleto do diagrama com efeito shimmer em vez de "Organizando o diagrama…".
+- Feedback em estilo toast para ações de copiar link / compartilhar (futuro).
 
 ---
 
-## 6. Motion spec
+## 6. Especificação de movimento
 
-| Interaction | Motion | Duration |
+| Interação | Movimento | Duração |
 |---|---|---|
-| Card hover | translateY(-2px) + glow fade-in | 180 ms ease-out |
-| Segmented/tab change | indicator slides | 200 ms |
-| Provider switch | node glow pulse in provider colour | 400 ms, once |
-| Walkthrough step | packet travels along edge; endpoints glow | 800 ms per step |
-| Hero mesh | blobs drift | 20 s loop |
-| Section reveal | fade + 8 px rise on first view | 300 ms, once |
+| Hover no card | translateY(-2px) + fade-in do brilho | 180 ms ease-out |
+| Mudança de segmento/aba | indicador desliza | 200 ms |
+| Troca de provedor | pulso de brilho no nó na cor do provedor | 400 ms, uma vez |
+| Etapa do passo a passo | pacote viaja pela aresta; extremidades brilham | 800 ms por etapa |
+| Malha do hero | manchas flutuam | loop de 20 s |
+| Revelação de seção | fade + subida de 8 px na primeira visualização | 300 ms, uma vez |
 
-Reduced motion: all of the above become instant state changes; the hero mesh is static.
-
----
-
-## 7. Implementation approach (when we build it)
-
-- Extend `globals.css` tokens: brand gradient, category and family palettes, tier tints, glow
-  shadows, dark-theme navy values. Expose via `@theme` so `bg-cat-tint`, `shadow-cat-glow` etc. work.
-- `data-category` / `data-family` attribute on page wrappers sets `--cat` / `--family` variables.
-- Schema: add `family` to concepts and `icon` to systems; validator checks both.
-- Build-time thumbnail script: reuse `layoutSystem` → write `public/thumbs/{slug}.svg`.
-- New small components: `CategoryChip`, `GlyphTile`, `DiagramThumb`, `SegmentedControl`
-  (sliding pill), `MeshGradient`, `ProgressRing`, `Skeleton`.
-- Diagram: tier tint from tier id; custom edge component with an animated packet (SVG
-  `<animateMotion>` or CSS offset-path) for the active step.
-- Tests: Playwright visual snapshots of home, one system page and one concept page in both themes;
-  axe contrast checks.
+Movimento reduzido: todos os itens acima tornam-se mudanças de estado instantâneas; a malha do hero fica estática.
 
 ---
 
-## 8. Phases
+## 7. Abordagem de implementação (quando construirmos)
 
-| Phase | Scope | Effort |
+- Estender os tokens em `globals.css`: gradiente da marca, paletas de categoria e família, tons de camada, sombras
+  de brilho, valores azul-marinho do tema escuro. Expor via `@theme` para que `bg-cat-tint`, `shadow-cat-glow` etc. funcionem.
+- O atributo `data-category` / `data-family` nos wrappers de página define as variáveis `--cat` / `--family`.
+- Schema: adicionar `family` aos conceitos e `icon` aos sistemas; o validador verifica ambos.
+- Script de miniatura em tempo de build: reutilizar `layoutSystem` → gravar `public/thumbs/{slug}.svg`.
+- Novos pequenos componentes: `CategoryChip`, `GlyphTile`, `DiagramThumb`, `SegmentedControl`
+  (pílula deslizante), `MeshGradient`, `ProgressRing`, `Skeleton`.
+- Diagrama: tom da camada a partir do id da camada; componente de aresta personalizado com um pacote animado (`<animateMotion>`
+  do SVG ou `offset-path` do CSS) para a etapa ativa.
+- Testes: snapshots visuais do Playwright da página inicial, uma página de sistema e uma página de conceito em ambos os temas;
+  verificações de contraste com axe.
+
+---
+
+## 8. Fases
+
+| Fase | Escopo | Esforço |
 |---|---|---|
-| 1. Colour foundations | Brand gradient, category + family palettes, tier tints, richer dark theme, coloured cards/chips/menus | ~1 day |
-| 2. Depth & polish | Hero mesh + gradient headline, header gradient line, card glows, gradient buttons, sliding segmented controls | ~1 day |
-| 3. Imagery | Diagram thumbnails, system glyphs, concept family icons, difficulty pills, illustrations | 2–3 days |
-| 4. Living diagrams | Walkthrough packet + endpoint glow, provider-switch flash, skeleton loading | 1–2 days |
-| 5. Page rhythm | Alternating home bands, dark learning-path band with progress rings, visual capacity/data tabs | 1–2 days |
-| 6. QA | Contrast audit both themes, reduced-motion pass, visual-regression snapshots | ~1 day |
+| 1. Fundações de cor | Gradiente da marca, paletas de categoria + família, tons de camada, tema escuro mais rico, cards/chips/menus coloridos | ~1 dia |
+| 2. Profundidade e refinamento | Malha do hero + título em gradiente, linha em gradiente no cabeçalho, brilhos nos cards, botões em gradiente, controles segmentados deslizantes | ~1 dia |
+| 3. Imagens | Miniaturas de diagramas, ícones de sistemas, ícones de famílias de conceitos, pílulas de dificuldade, ilustrações | 2–3 dias |
+| 4. Diagramas vivos | Pacote no passo a passo + brilho nas extremidades, flash na troca de provedor, carregamento com esqueleto | 1–2 dias |
+| 5. Ritmo de página | Faixas alternadas na página inicial, faixa escura de trilhas de aprendizado com anéis de progresso, abas visuais de capacidade/dados | 1–2 dias |
+| 6. QA | Auditoria de contraste em ambos os temas, revisão de movimento reduzido, snapshots de regressão visual | ~1 dia |
 
-Each phase is independently shippable.
+Cada fase pode ser entregue de forma independente.
 
-## 9. Acceptance criteria
+## 9. Critérios de aceitação
 
-- A screenshot of any two system pages from different categories is distinguishable at a glance.
-- The home page has at least four visually distinct bands.
-- Every concept and system card shows a picture (thumbnail or glyph), not just text.
-- Lighthouse accessibility 100 and axe zero contrast violations in light and dark.
-- With reduced motion enabled, no element animates.
+- Uma captura de tela de quaisquer duas páginas de sistemas de categorias diferentes é distinguível num piscar de olhos.
+- A página inicial tem pelo menos quatro faixas visualmente distintas.
+- Cada card de conceito e de sistema mostra uma imagem (miniatura ou ícone), não apenas texto.
+- Acessibilidade 100 no Lighthouse e zero violações de contraste no axe nos modos claro e escuro.
+- Com movimento reduzido ativado, nenhum elemento é animado.

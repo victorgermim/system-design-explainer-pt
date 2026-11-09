@@ -9,11 +9,11 @@ export interface ProviderMeta {
 }
 
 export const providers: ProviderMeta[] = [
-  { id: "generic", name: "Generic", shortName: "Generic", accent: "var(--provider-generic)" },
+  { id: "generic", name: "Genérico", shortName: "Genérico", accent: "var(--provider-generic)" },
   { id: "aws", name: "Amazon Web Services", shortName: "AWS", accent: "var(--provider-aws)" },
   { id: "gcp", name: "Google Cloud", shortName: "GCP", accent: "var(--provider-gcp)" },
   { id: "azure", name: "Microsoft Azure", shortName: "Azure", accent: "var(--provider-azure)" },
-  { id: "oss", name: "Open source / self-hosted", shortName: "Open source", accent: "var(--provider-oss)" },
+  { id: "oss", name: "Código aberto / auto-hospedado", shortName: "Código aberto", accent: "var(--provider-oss)" },
 ];
 
 export function getProvider(id: Provider): ProviderMeta {

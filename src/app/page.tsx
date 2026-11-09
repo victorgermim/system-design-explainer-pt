@@ -17,52 +17,52 @@ const lenses = [
   {
     icon: Cloud,
     hue: "infrastructure",
-    title: "Switch clouds",
-    text: "Relabel every component for AWS, Google Cloud, Azure or open source in one click.",
+    title: "Troque de nuvem",
+    text: "Renomeie cada componente para AWS, Google Cloud, Azure ou código aberto com um clique.",
   },
   {
     icon: PlayCircle,
     hue: "mobility",
-    title: "Play walkthroughs",
-    text: "Follow a request hop by hop — upload a video, book a seat, pay a merchant.",
+    title: "Reproduza passo a passo",
+    text: "Acompanhe uma requisição salto a salto — enviar um vídeo, reservar um assento, pagar um lojista.",
   },
   {
     icon: Boxes,
     hue: "commerce-fintech",
-    title: "Inspect components",
-    text: "Every building block with its options per provider, pitfalls and where it's used.",
+    title: "Inspecione componentes",
+    text: "Cada bloco de construção com suas opções por provedor, armadilhas e onde é usado.",
   },
   {
     icon: Lightbulb,
     hue: "bookings",
-    title: "Learn the patterns",
-    text: "Caching, sharding, fan-out, sagas, idempotency — explained and linked to real designs.",
+    title: "Aprenda os padrões",
+    text: "Cache, sharding, fan-out, sagas, idempotência — explicados e ligados a designs reais.",
   },
 ];
 
 const learningPaths = [
   {
-    title: "Foundations",
+    title: "Fundamentos",
     hue: "infrastructure",
-    level: "Start here",
+    level: "Comece aqui",
     slugs: ["url-shortener", "pastebin", "rate-limiter", "typeahead"],
   },
   {
-    title: "Real-time systems",
+    title: "Sistemas em tempo real",
     hue: "mobility",
-    level: "Intermediate",
+    level: "Intermediário",
     slugs: ["whatsapp", "websocket-scale", "live-sports", "uber"],
   },
   {
-    title: "Media at scale",
+    title: "Mídia em escala",
     hue: "media-social",
-    level: "Advanced",
+    level: "Avançado",
     slugs: ["instagram", "twitter", "youtube", "netflix"],
   },
   {
-    title: "Money & bookings",
+    title: "Dinheiro e reservas",
     hue: "commerce-fintech",
-    level: "Advanced",
+    level: "Avançado",
     slugs: ["bookmyshow", "amazon", "payments", "bnpl"],
   },
 ];
@@ -109,37 +109,37 @@ export default function HomePage() {
           </div>
           <div>
             <p className="text-sm font-medium text-accent">
-              {systems.length} systems · {components.length} components · {concepts.length} concepts
+              {systems.length} sistemas · {components.length} componentes · {concepts.length} conceitos
             </p>
             <h1 className="mt-3 text-4xl font-semibold tracking-tight text-fg md:text-5xl">
-              How are large systems <span className="text-brand">built?</span>
+              Como grandes sistemas são <span className="text-brand">construídos?</span>
             </h1>
             <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
-              Interactive architectures for YouTube, Uber, Amazon and more — switch between AWS, Google Cloud,
-              Azure and open-source tools, and follow every request hop by hop.
+              Arquiteturas interativas para YouTube, Uber, Amazon e mais — alterne entre AWS, Google Cloud,
+              Azure e ferramentas de código aberto, e acompanhe cada requisição salto a salto.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
                 href="/systems/youtube"
                 className="inline-flex items-center gap-2 bg-brand shadow-soft rounded-xl px-4 py-2.5 text-sm font-semibold text-[#fff] transition-all hover:-translate-y-0.5 hover:opacity-95"
               >
-                Explore YouTube <ArrowRight size={16} aria-hidden />
+                Explorar YouTube <ArrowRight size={16} aria-hidden />
               </Link>
               <a
                 href="#catalogue"
                 className="inline-flex items-center gap-2 rounded-xl border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-fg transition-colors hover:border-line-strong"
               >
-                Browse all systems
+                Ver todos os sistemas
               </a>
             </div>
           </div>
           <HeroDiagram system={hero} />
         </section>
 
-        {/* What you can do */}
+        {/* O que você pode fazer */}
         <section aria-labelledby="lenses" className="py-6">
           <h2 id="lenses" className="sr-only">
-            What you can do
+            O que você pode fazer
           </h2>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {lenses.map(({ icon: Icon, hue, title, text }) => (
@@ -162,7 +162,7 @@ export default function HomePage() {
         </section>
       </div>
 
-      {/* Learning paths: a dark band in both themes breaks up the page. */}
+      {/* Trilhas de aprendizado: a dark band in both themes breaks up the page. */}
       <section
         aria-labelledby="paths"
         className="scope-dark relative isolate my-10 overflow-hidden bg-bg py-14"
@@ -174,10 +174,10 @@ export default function HomePage() {
         />
         <div className="mx-auto max-w-7xl px-4 md:px-8">
           <h2 id="paths" className="text-2xl font-semibold tracking-tight text-fg">
-            Learning paths
+            Trilhas de aprendizado
           </h2>
           <p className="mt-1 text-muted">
-            Each path builds on the patterns from the one before. Progress is saved in this browser.
+            Cada trilha se baseia nos padrões da anterior. O progresso é salvo neste navegador.
           </p>
           <LearningPaths paths={paths} />
         </div>
@@ -187,7 +187,7 @@ export default function HomePage() {
         {/* Catalogue */}
         <section id="catalogue" aria-labelledby="catalogue-title" className="scroll-mt-4 pb-16 pt-6">
           <h2 id="catalogue-title" className="text-2xl font-semibold tracking-tight text-fg">
-            All systems
+            Todos os sistemas
           </h2>
           <SystemCatalogue
             cards={cards}

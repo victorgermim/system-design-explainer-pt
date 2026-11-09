@@ -77,34 +77,34 @@ export function componentsUsingConcept(slug: string): ComponentKind[] {
 }
 
 export const systemCategoryLabels: Record<SystemCategory, string> = {
-  "media-social": "Media & Social",
-  mobility: "Mobility & Logistics",
-  "commerce-fintech": "Commerce & Fintech",
-  bookings: "Bookings & Marketplaces",
-  infrastructure: "Building Blocks",
+  "media-social": "Mídia e Social",
+  mobility: "Mobilidade e Logística",
+  "commerce-fintech": "Comércio e Fintech",
+  bookings: "Reservas e Marketplaces",
+  infrastructure: "Blocos de Construção",
 };
 
 export const conceptFamilyLabels: Record<ConceptFamily, string> = {
-  data: "Data & storage",
-  scale: "Scale & distribution",
-  messaging: "Messaging & flow",
-  reliability: "Reliability & correctness",
-  security: "Security",
+  data: "Dados e armazenamento",
+  scale: "Escala e distribuição",
+  messaging: "Mensageria e fluxo",
+  reliability: "Confiabilidade e correção",
+  security: "Segurança",
 };
 
-export const difficultyLabels = { 1: "Beginner", 2: "Intermediate", 3: "Advanced" } as const;
+export const difficultyLabels = { 1: "Iniciante", 2: "Intermediário", 3: "Avançado" } as const;
 
 export const componentCategoryLabels: Record<ComponentCategory, string> = {
-  client: "Clients",
-  edge: "Edge & networking",
-  security: "Security & identity",
-  compute: "Compute",
-  messaging: "Messaging",
-  storage: "Storage",
-  database: "Databases & search",
-  cache: "Caching",
-  analytics: "Analytics & processing",
+  client: "Clientes",
+  edge: "Borda e redes",
+  security: "Segurança e identidade",
+  compute: "Computação",
+  messaging: "Mensageria",
+  storage: "Armazenamento",
+  database: "Bancos de dados e busca",
+  cache: "Cache",
+  analytics: "Analytics e processamento",
   ml: "Machine learning",
-  ops: "Operations",
-  external: "External services",
+  ops: "Operações",
+  external: "Serviços externos",
 };

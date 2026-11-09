@@ -1,44 +1,44 @@
-# System Design Explainer — Implementation Plan
+# System Design Explainer — Plano de Implementação
 
-Goal: one website that explains how to build large systems (YouTube, Instagram, Uber, …), shows an
-interactive architecture diagram for each, and lets the reader switch the diagram between **AWS, Google
-Cloud, Azure and Open-source / self-hosted**, with alternatives listed for every component.
-Content comes from the PDFs (see [NOTES.md](NOTES.md)); there is **no PDF reader**.
+Objetivo: um único site que explique como construir grandes sistemas (YouTube, Instagram, Uber, …), mostre um
+diagrama de arquitetura interativo para cada um e permita que o leitor alterne o diagrama entre **AWS, Google
+Cloud, Azure e Código aberto / auto-hospedado**, com alternativas listadas para cada componente.
+O conteúdo vem dos PDFs (veja [NOTES.md](NOTES.md)); **não há leitor de PDF**.
 
 ## Status
 
-| Milestone | State |
+| Marco | Estado |
 |---|---|
-| 0 Repo cleanup | Done |
-| 1 Unified data model | Done |
-| 2 Diagram engine (ELK layout, URL state) | Done |
-| 3 System page + walkthroughs | Done |
-| 4 Content wave 1 (10 systems) | Done |
-| 5 Catalogue, components, concepts, search | Done |
-| 6 Content wave 2 (25 systems) | Done — 35 of 36 systems written up (Redis is diagram-only) |
-| 7 Polish & deploy (mobile, a11y, OG images, static export, e2e) | Done |
-| Phase 2 / Phase 3 | Not started |
+| 0 Limpeza do repositório | Concluído |
+| 1 Modelo de dados unificado | Concluído |
+| 2 Motor de diagramas (layout ELK, estado na URL) | Concluído |
+| 3 Página de sistema + fluxos passo a passo | Concluído |
+| 4 Onda de conteúdo 1 (10 sistemas) | Concluído |
+| 5 Catálogo, componentes, conceitos, busca | Concluído |
+| 6 Onda de conteúdo 2 (25 sistemas) | Concluído — 35 de 36 sistemas detalhados (Redis tem apenas diagrama) |
+| 7 Refinamento e deploy (mobile, a11y, imagens OG, exportação estática, e2e) | Concluído |
+| Fase 2 / Fase 3 | Não iniciado |
 
-Deviations from the original plan: concepts are validated TypeScript data rather than MDX; search is
-a small built-in matcher instead of Pagefind/Fuse; diagrams have no minimap; provider icons are
-generic (lucide) until the official icon licences are checked.
+Desvios em relação ao plano original: os conceitos são dados em TypeScript validados em vez de MDX; a busca é
+um pequeno comparador embutido em vez de Pagefind/Fuse; os diagramas não têm minimapa; os ícones de provedores são
+genéricos (lucide) até que as licenças dos ícones oficiais sejam verificadas.
 
 ---
 
-## 1. Current state of the repo
+## 1. Estado atual do repositório
 
-| Path | What it is | Decision |
+| Caminho | O que é | Decisão |
 |---|---|---|
-| `archviz/` | Next.js 16 + React 19 + `@xyflow/react` + Tailwind 4. Has a diagram, provider selector, node detail panel, 5–7 apps | **Keep as the base** |
-| `archviz/src/data/applications/*` + `cloudMappings.ts` + `types.ts` | Data model #1 (`serviceType`, providers incl. "generic") | Merge into one model |
-| `archviz/src/data/architectures/*` + `cloud-providers.ts` | Data model #2 (`componentType`, 3 providers) — a parallel duplicate | Merge into one model |
-| `system-design-atlas/` | Static HTML card library + embedded PDF reader, `data/designs.js` (auto-extracted notes) | **Delete**; its notes are superseded by `docs/NOTES.md` |
-| `system-design-atlas/assets/pdfs/` | Copies of every PDF | **Delete** |
-| `tools/build_site.py` | Generator for the atlas | **Delete** |
-| `*.pdf` at repo root (59 files) | Source material | Move to `source-pdfs/` (git-ignored) or out of the repo |
-| `archviz/.next`, `tsconfig.tsbuildinfo` | Build output | Delete, git-ignore |
+| `archviz/` | Next.js 16 + React 19 + `@xyflow/react` + Tailwind 4. Possui diagrama, seletor de provedor, painel de detalhes do nó, 5–7 apps | **Manter como base** |
+| `archviz/src/data/applications/*` + `cloudMappings.ts` + `types.ts` | Modelo de dados #1 (`serviceType`, provedores incl. "generic") | Mesclar em um único modelo |
+| `archviz/src/data/architectures/*` + `cloud-providers.ts` | Modelo de dados #2 (`componentType`, 3 provedores) — uma duplicata paralela | Mesclar em um único modelo |
+| `system-design-atlas/` | Biblioteca estática de cards em HTML + leitor de PDF embutido, `data/designs.js` (notas extraídas automaticamente) | **Excluir**; suas notas foram substituídas por `docs/NOTES.md` |
+| `system-design-atlas/assets/pdfs/` | Cópias de todos os PDFs | **Excluir** |
+| `tools/build_site.py` | Gerador para o atlas | **Excluir** |
+| `*.pdf` na raiz do repositório (59 arquivos) | Material de origem | Mover para `source-pdfs/` (ignorado pelo git) ou para fora do repositório |
+| `archviz/.next`, `tsconfig.tsbuildinfo` | Saída de build | Excluir, ignorar no git |
 
-### Target layout (single site at the repo root)
+### Estrutura alvo (um único site na raiz do repositório)
 
 ```
 system-design-explainer/
@@ -56,9 +56,9 @@ system-design-explainer/
 └─ package.json
 ```
 
-## 2. Data model (the heart of the project)
+## 2. Modelo de dados (o coração do projeto)
 
-One schema, validated with **Zod** at build time so a bad content file fails the build.
+Um único schema, validado com **Zod** em tempo de build para que um arquivo de conteúdo inválido falhe o build.
 
 ```ts
 type Provider = "generic" | "aws" | "gcp" | "azure" | "oss";
@@ -94,85 +94,85 @@ interface SystemDesign {
 }
 ```
 
-Key ideas:
-- Diagrams store **component kinds**, never vendor names. The provider toggle resolves the label/icon
-  through `components.ts`; `overrides` handles special cases (e.g. Netflix CDN → "Open Connect").
-- **No hand-placed x/y coordinates.** Use `elkjs` (layered layout, left→right, grouped by tier) so new
-  systems need only nodes + edges. Optionally pin a few positions.
-- `flows` reference edges so the diagram can highlight a request path step-by-step.
+Ideias principais:
+- Os diagramas armazenam **tipos de componentes**, nunca nomes de fornecedores. O seletor de provedor resolve o rótulo/ícone
+  através de `components.ts`; `overrides` trata casos especiais (por exemplo, CDN da Netflix → "Open Connect").
+- **Sem coordenadas x/y posicionadas manualmente.** Use `elkjs` (layout em camadas, esquerda→direita, agrupado por camada) para que novos
+  sistemas precisem apenas de nós + arestas. Opcionalmente, fixe algumas posições.
+- `flows` referenciam arestas para que o diagrama possa destacar o caminho de uma requisição passo a passo.
 
-### Component catalogue — starting mapping
+### Catálogo de componentes — mapeamento inicial
 
-| Component | AWS | Google Cloud | Azure | Open-source / alternatives |
+| Componente | AWS | Google Cloud | Azure | Código aberto / alternativas |
 |---|---|---|---|---|
 | DNS / geo-routing | Route 53 | Cloud DNS | Azure DNS / Traffic Manager | CoreDNS, PowerDNS; Cloudflare |
 | CDN | CloudFront | Cloud CDN / Media CDN | Azure Front Door | Varnish, Apache Traffic Server; Cloudflare, Fastly, Akamai |
 | WAF / DDoS | AWS WAF, Shield | Cloud Armor | Azure WAF, DDoS Protection | ModSecurity, Coraza |
-| Load balancer | ALB / NLB | Cloud Load Balancing | Load Balancer / Application Gateway | NGINX, HAProxy, Envoy, Traefik |
+| Balanceador de carga | ALB / NLB | Cloud Load Balancing | Load Balancer / Application Gateway | NGINX, HAProxy, Envoy, Traefik |
 | API gateway | API Gateway | Apigee / API Gateway | API Management | Kong, Apache APISIX, Tyk, KrakenD |
-| Auth / identity | Cognito | Identity Platform | Entra ID / External ID | Keycloak, Ory, Authentik |
-| Containers | EKS / ECS (Fargate) | GKE / Cloud Run | AKS / Container Apps | Kubernetes, Nomad |
-| Serverless functions | Lambda | Cloud Run functions | Azure Functions | Knative, OpenFaaS |
-| Relational DB | RDS / Aurora | Cloud SQL / AlloyDB / Spanner | Azure SQL / Azure DB for PostgreSQL | PostgreSQL, MySQL, Vitess, CockroachDB |
+| Autenticação / identidade | Cognito | Identity Platform | Entra ID / External ID | Keycloak, Ory, Authentik |
+| Contêineres | EKS / ECS (Fargate) | GKE / Cloud Run | AKS / Container Apps | Kubernetes, Nomad |
+| Funções serverless | Lambda | Cloud Run functions | Azure Functions | Knative, OpenFaaS |
+| BD relacional | RDS / Aurora | Cloud SQL / AlloyDB / Spanner | Azure SQL / Azure DB for PostgreSQL | PostgreSQL, MySQL, Vitess, CockroachDB |
 | Wide-column | Keyspaces / DynamoDB | Bigtable | Cosmos DB (Cassandra API) | Cassandra, ScyllaDB, HBase |
-| Document / KV | DynamoDB / DocumentDB | Firestore | Cosmos DB | MongoDB, CouchDB |
+| Documentos / KV | DynamoDB / DocumentDB | Firestore | Cosmos DB | MongoDB, CouchDB |
 | Cache | ElastiCache / MemoryDB | Memorystore | Azure Managed Redis | Redis, Valkey, Memcached, Dragonfly |
-| Object storage | S3 | Cloud Storage | Blob Storage | MinIO, Ceph |
-| Message queue | SQS / SNS | Pub/Sub / Cloud Tasks | Service Bus / Queue Storage | RabbitMQ, NATS |
+| Armazenamento de objetos | S3 | Cloud Storage | Blob Storage | MinIO, Ceph |
+| Fila de mensagens | SQS / SNS | Pub/Sub / Cloud Tasks | Service Bus / Queue Storage | RabbitMQ, NATS |
 | Event streaming | MSK / Kinesis | Pub/Sub / Managed Kafka | Event Hubs | Kafka, Redpanda, Pulsar |
-| Stream processing | Managed Service for Apache Flink | Dataflow | Stream Analytics | Flink, Spark Structured Streaming |
+| Processamento de streams | Managed Service for Apache Flink | Dataflow | Stream Analytics | Flink, Spark Structured Streaming |
 | Batch / data lake | EMR / Glue | Dataproc | HDInsight / Fabric | Spark, Trino, Hadoop |
 | Warehouse / OLAP | Redshift | BigQuery | Synapse / Fabric | ClickHouse, Apache Druid, Pinot |
-| Search | OpenSearch Service | Vertex AI Search / Elastic Cloud | Azure AI Search | Elasticsearch, OpenSearch, Solr, Meilisearch |
-| Vector search | OpenSearch k-NN / Aurora pgvector | Vertex AI Vector Search | Azure AI Search / Cosmos DB vector | pgvector, Milvus, Qdrant, Weaviate |
-| Graph DB | Neptune | Spanner Graph | Cosmos DB (Gremlin) | Neo4j, JanusGraph |
-| Time-series | Timestream | Bigtable | Azure Data Explorer | TimescaleDB, InfluxDB, Prometheus |
-| Video transcoding | Elemental MediaConvert | Transcoder API | (Media Services retired) → FFmpeg on AKS | FFmpeg, GStreamer |
-| Real-time / WebSocket | API Gateway WebSocket / AppSync | Firebase RTDB / self-hosted on GKE | Web PubSub / SignalR Service | Socket.IO, Centrifugo, NATS |
-| WebRTC / TURN | Kinesis Video Streams WebRTC / Chime SDK | — (self-host on GKE) | Azure Communication Services | coturn, Pion, LiveKit, mediasoup, Janus |
-| Push notifications | SNS mobile push | Firebase Cloud Messaging | Notification Hubs | ntfy, Gotify (+ APNs/FCM directly) |
-| Email / SMS | SES / End User Messaging | — (partners) | Azure Communication Services | Postal; Twilio, SendGrid |
-| Maps / geo | Amazon Location Service | Google Maps Platform | Azure Maps | OpenStreetMap, OSRM, PostGIS, H3 |
-| ML / recommendations | SageMaker / Personalize | Vertex AI | Azure Machine Learning | Kubeflow, MLflow, Feast |
-| Workflow / orchestration | Step Functions / MWAA | Workflows / Cloud Composer | Logic Apps / Durable Functions | Temporal, Airflow |
-| Coordination / config | AppConfig / DynamoDB locks | — | App Configuration | ZooKeeper, etcd, Consul |
-| Secrets / keys | Secrets Manager / KMS | Secret Manager / Cloud KMS | Key Vault | OpenBao, Vault, SOPS |
-| Metrics & tracing | CloudWatch / X-Ray | Cloud Monitoring / Trace | Azure Monitor / App Insights | Prometheus, Grafana, Jaeger, OpenTelemetry |
+| Busca | OpenSearch Service | Vertex AI Search / Elastic Cloud | Azure AI Search | Elasticsearch, OpenSearch, Solr, Meilisearch |
+| Busca vetorial | OpenSearch k-NN / Aurora pgvector | Vertex AI Vector Search | Azure AI Search / Cosmos DB vector | pgvector, Milvus, Qdrant, Weaviate |
+| BD de grafos | Neptune | Spanner Graph | Cosmos DB (Gremlin) | Neo4j, JanusGraph |
+| Séries temporais | Timestream | Bigtable | Azure Data Explorer | TimescaleDB, InfluxDB, Prometheus |
+| Transcodificação de vídeo | Elemental MediaConvert | Transcoder API | (Media Services descontinuado) → FFmpeg no AKS | FFmpeg, GStreamer |
+| Tempo real / WebSocket | API Gateway WebSocket / AppSync | Firebase RTDB / auto-hospedado no GKE | Web PubSub / SignalR Service | Socket.IO, Centrifugo, NATS |
+| WebRTC / TURN | Kinesis Video Streams WebRTC / Chime SDK | — (auto-hospedar no GKE) | Azure Communication Services | coturn, Pion, LiveKit, mediasoup, Janus |
+| Notificações push | SNS mobile push | Firebase Cloud Messaging | Notification Hubs | ntfy, Gotify (+ APNs/FCM diretamente) |
+| E-mail / SMS | SES / End User Messaging | — (parceiros) | Azure Communication Services | Postal; Twilio, SendGrid |
+| Mapas / geo | Amazon Location Service | Google Maps Platform | Azure Maps | OpenStreetMap, OSRM, PostGIS, H3 |
+| ML / recomendações | SageMaker / Personalize | Vertex AI | Azure Machine Learning | Kubeflow, MLflow, Feast |
+| Workflow / orquestração | Step Functions / MWAA | Workflows / Cloud Composer | Logic Apps / Durable Functions | Temporal, Airflow |
+| Coordenação / config | AppConfig / locks no DynamoDB | — | App Configuration | ZooKeeper, etcd, Consul |
+| Segredos / chaves | Secrets Manager / KMS | Secret Manager / Cloud KMS | Key Vault | OpenBao, Vault, SOPS |
+| Métricas e tracing | CloudWatch / X-Ray | Cloud Monitoring / Trace | Azure Monitor / App Insights | Prometheus, Grafana, Jaeger, OpenTelemetry |
 | Logs | CloudWatch Logs | Cloud Logging | Log Analytics | ELK / OpenSearch, Loki |
-| Infra as code | CloudFormation / CDK | Infrastructure Manager | Bicep / ARM | Terraform, OpenTofu, Pulumi |
-| Payments (external) | — | — | — | Stripe, Razorpay, Adyen, PayPal |
+| Infra como código | CloudFormation / CDK | Infrastructure Manager | Bicep / ARM | Terraform, OpenTofu, Pulumi |
+| Pagamentos (externo) | — | — | — | Stripe, Razorpay, Adyen, PayPal |
 
-> Verify each mapping against current provider docs while writing `components.ts` (services get
-> renamed/retired — e.g. Azure Media Services and Amazon Pinpoint). Add a `lastVerified` date per row.
+> Verifique cada mapeamento na documentação atual do provedor ao escrever `components.ts` (serviços são
+> renomeados/descontinuados — por exemplo, Azure Media Services e Amazon Pinpoint). Adicione uma data `lastVerified` por linha.
 
-## 3. Website features
+## 3. Funcionalidades do site
 
 ### MVP
-1. **System catalogue** – home page grid of all systems, filter by category / difficulty / concept used, global search (⌘K).
-2. **System page** in the 9-step HLD structure from the PDFs: requirements, APIs, estimates, data model, architecture, flows, bottlenecks, scaling, extensions — with a sticky section nav.
-3. **Interactive architecture diagram** (React Flow): pan/zoom, minimap, grouped tiers (edge / services / data / async / analytics), edge labels with protocol.
-4. **Cloud provider switcher** – Generic · AWS · GCP · Azure · Open-source. Node labels and icons swap live; choice persists in the URL (`?cloud=aws`) so links are shareable.
-5. **Component detail panel** – click a node: what it does in *this* system, the chosen provider's service, every alternative across providers/OSS, when to use, pitfalls, and links to concept pages.
-6. **Request-flow walkthroughs** – "Play: upload a video", "Play: request a ride": highlights edges step-by-step with a narration caption.
-7. **Component catalogue page** – the full mapping table above, filterable, plus "which systems use this".
-8. **Concept library** – caching, sharding, rate limiting, fan-out, idempotency, sagas, geo-indexing, ABR streaming, consistent hashing, etc., each linking back to systems.
-9. **Back-of-the-envelope widgets** – estimates shown as derivations (DAU × actions ÷ 86 400 = QPS).
-10. Dark/light theme, responsive (diagram falls back to a vertical list on phones), static export.
+1. **Catálogo de sistemas** – grade na página inicial com todos os sistemas, filtro por categoria / dificuldade / conceito usado, busca global (⌘K).
+2. **Página de sistema** na estrutura de HLD de 9 passos dos PDFs: requisitos, APIs, estimativas, modelo de dados, arquitetura, fluxos, gargalos, escalabilidade, extensões — com navegação de seção fixa.
+3. **Diagrama de arquitetura interativo** (React Flow): pan/zoom, minimapa, camadas agrupadas (borda / serviços / dados / assíncrono / analytics), rótulos de arestas com protocolo.
+4. **Seletor de provedor de nuvem** – Genérico · AWS · GCP · Azure · Código aberto. Rótulos e ícones dos nós trocam ao vivo; a escolha persiste na URL (`?cloud=aws`) para que os links sejam compartilháveis.
+5. **Painel de detalhes do componente** – clique em um nó: o que ele faz *neste* sistema, o serviço do provedor escolhido, todas as alternativas entre provedores/OSS, quando usar, armadilhas e links para páginas de conceitos.
+6. **Fluxos de requisição passo a passo** – "Reproduzir: enviar um vídeo", "Reproduzir: solicitar uma corrida": destaca as arestas passo a passo com uma legenda explicativa.
+7. **Página de catálogo de componentes** – a tabela de mapeamento completa acima, filtrável, mais "quais sistemas usam isto".
+8. **Biblioteca de conceitos** – caching, sharding, rate limiting, fan-out, idempotência, sagas, indexação geográfica, streaming ABR, consistent hashing, etc., cada um apontando de volta para os sistemas.
+9. **Widgets de estimativa de envelope** – estimativas mostradas como derivações (DAU × ações ÷ 86.400 = QPS).
+10. Tema escuro/claro, responsivo (o diagrama vira uma lista vertical em celulares), exportação estática.
 
-### Phase 2
-11. **Compare view** – two providers (or two systems) side-by-side.
-12. **Bottleneck overlay** – toggle that highlights hotspot nodes and shows the fix.
-13. **Export** – diagram as PNG/SVG, and the stack as a Markdown/Terraform-module checklist.
-14. **"Build your own" mode** – start from a template, add/remove components, provider resolves automatically; saved in localStorage / share-link.
-15. **Rough cost hints** – qualitative cost tier per component per provider (no live pricing).
+### Fase 2
+11. **Visualização comparativa** – dois provedores (ou dois sistemas) lado a lado.
+12. **Sobreposição de gargalos** – alternador que destaca nós críticos (hotspots) e mostra a solução.
+13. **Exportação** – diagrama como PNG/SVG, e a stack como um checklist em Markdown/módulo Terraform.
+14. **Modo "Construa o seu"** – comece a partir de um modelo, adicione/remova componentes, o provedor resolve automaticamente; salvo no localStorage / link compartilhável.
+15. **Dicas aproximadas de custo** – faixa qualitativa de custo por componente e por provedor (sem preços em tempo real).
 
-### Phase 3
-16. **LLD tab** for systems with a Go LLD PDF: class diagram (Mermaid), patterns used, concurrency notes.
-17. **LLD-only pages** (ATM, Elevator, Chess, Ludo, Blackjack, Jigsaw, Vending, Library, Parking).
-18. **Interview prep** – Q&A cards from *Technical Interview Questions*; "explain this system in 45 min" checklist per system.
-19. Quizzes per system.
+### Fase 3
+16. **Aba LLD** para sistemas com um PDF de LLD em Go: diagrama de classes (Mermaid), padrões usados, notas de concorrência.
+17. **Páginas exclusivas de LLD** (Caixa eletrônico, Elevador, Xadrez, Ludo, Blackjack, Quebra-cabeça, Máquina de vendas, Biblioteca, Estacionamento).
+18. **Preparação para entrevistas** – cards de perguntas e respostas de *Technical Interview Questions*; checklist "explique este sistema em 45 min" por sistema.
+19. Quizzes por sistema.
 
-## 4. Routes
+## 4. Rotas
 
 ```
 /                         catalogue
@@ -185,39 +185,39 @@ Key ideas:
 /interview                phase 3
 ```
 
-## 5. Tech stack
+## 5. Stack tecnológica
 
-- **Next.js (App Router) with `output: "export"`** – fully static, host anywhere (Vercel, Netlify, GitHub Pages, S3+CloudFront).
-- **@xyflow/react** (already present) for diagrams + **elkjs** for automatic layout.
-- **Tailwind 4** (already present) + **shadcn/ui** primitives; **lucide-react** icons.
-- **Zod** for content validation; **MDX** (`@next/mdx`) for concept pages.
-- **Pagefind** or **Fuse.js** for client-side search.
-- Provider icons: official AWS/Azure/GCP architecture icon sets (check each licence); simple generic SVGs otherwise.
-- **Vitest** for schema/resolver tests, **Playwright** smoke tests (provider switch, node click, flow play).
+- **Next.js (App Router) com `output: "export"`** – totalmente estático, hospede em qualquer lugar (Vercel, Netlify, GitHub Pages, S3+CloudFront).
+- **@xyflow/react** (já presente) para diagramas + **elkjs** para layout automático.
+- **Tailwind 4** (já presente) + primitivos **shadcn/ui**; ícones **lucide-react**.
+- **Zod** para validação de conteúdo; **MDX** (`@next/mdx`) para páginas de conceitos.
+- **Pagefind** ou **Fuse.js** para busca no lado do cliente.
+- Ícones de provedores: conjuntos oficiais de ícones de arquitetura da AWS/Azure/GCP (verificar cada licença); SVGs genéricos simples caso contrário.
+- **Vitest** para testes de schema/resolvedor, testes de fumaça com **Playwright** (troca de provedor, clique em nó, reprodução de fluxo).
 
-## 6. Milestones
+## 6. Marcos
 
-| # | Milestone | Output |
+| # | Marco | Entrega |
 |---|---|---|
-| 0 | **Repo cleanup** | Delete `system-design-atlas/`, `tools/`, `.next/`; move `archviz/` contents to repo root; move PDFs to git-ignored `source-pdfs/`; update README; one `git` history |
-| 1 | **Unify data model** | Single `types/`, `content/components.ts` (table in §2), Zod schemas, delete the two old models; port existing YouTube/Instagram/Uber/Amazon diagrams to new format |
-| 2 | **Diagram engine** | ELK auto-layout, tier groups, provider resolver, icons, URL-synced provider state, detail panel with alternatives |
-| 3 | **System page** | 9-section layout, estimates widget, data-model table, flow walkthrough player |
-| 4 | **Content wave 1 (flagships)** | YouTube, Netflix, Instagram, Twitter, Messenger, Uber, Amazon, Payments, URL shortener, Rate limiter |
-| 5 | **Catalogue, components & concepts pages, search** | Home grid, `/components`, ~20 concept MDX pages |
-| 6 | **Content wave 2** | Remaining HLD systems (Maps, Dropbox, Airbnb, Zomato, BookMyShow, MakeMyTrip, Airline, Practo, Urban Company, Porter, Driver fleet, NoBroker, Quora, LinkedIn, Typeahead, Crawler, Pastebin, BNPL, Brokerage, Payment gateway, AstroTalk, Sports, WebSocket, WebRTC, Car rental, Meeting scheduler) |
-| 7 | **Polish & deploy** | Mobile layout, a11y, OG images per system, static deploy, Playwright smoke tests |
-| 8 | Phase 2 → Phase 3 features | Compare, export, builder, LLD, interview prep |
+| 0 | **Limpeza do repositório** | Excluir `system-design-atlas/`, `tools/`, `.next/`; mover conteúdo de `archviz/` para a raiz do repositório; mover PDFs para `source-pdfs/` ignorado no git; atualizar README; um único histórico `git` |
+| 1 | **Unificar modelo de dados** | Único `types/`, `content/components.ts` (tabela na §2), schemas Zod, excluir os dois modelos antigos; portar os diagramas existentes de YouTube/Instagram/Uber/Amazon para o novo formato |
+| 2 | **Motor de diagramas** | Auto-layout ELK, grupos de camadas, resolvedor de provedor, ícones, estado de provedor sincronizado na URL, painel de detalhes com alternativas |
+| 3 | **Página de sistema** | Layout de 9 seções, widget de estimativas, tabela de modelo de dados, reprodutor de fluxo passo a passo |
+| 4 | **Onda de conteúdo 1 (principais)** | YouTube, Netflix, Instagram, Twitter, Messenger, Uber, Amazon, Pagamentos, Encurtador de URL, Rate limiter |
+| 5 | **Catálogo, páginas de componentes e conceitos, busca** | Grade inicial, `/components`, ~20 páginas MDX de conceitos |
+| 6 | **Onda de conteúdo 2** | Sistemas HLD restantes (Maps, Dropbox, Airbnb, Zomato, BookMyShow, MakeMyTrip, Companhia aérea, Practo, Urban Company, Porter, Frota de motoristas, NoBroker, Quora, LinkedIn, Typeahead, Crawler, Pastebin, BNPL, Corretora, Gateway de pagamento, AstroTalk, Esportes, WebSocket, WebRTC, Aluguel de carros, Agendador de reuniões) |
+| 7 | **Refinamento e deploy** | Layout mobile, a11y, imagens OG por sistema, deploy estático, testes de fumaça com Playwright |
+| 8 | Funcionalidades da Fase 2 → Fase 3 | Comparar, exportar, construtor, LLD, preparação para entrevistas |
 
-### Content authoring workflow (per system)
-1. Read the PDF text (and its duplicate/LLD sibling) → fill the `SystemDesign` file section by section.
-2. Model nodes using only catalogue kinds; add `overrides` only when a system uses something specific.
-3. Write 1–3 `flows`.
-4. `npm run validate` (Zod) → visual check with each provider → commit.
+### Fluxo de trabalho de autoria de conteúdo (por sistema)
+1. Ler o texto do PDF (e seu par duplicado/LLD) → preencher o arquivo `SystemDesign` seção por seção.
+2. Modelar nós usando apenas tipos do catálogo; adicionar `overrides` apenas quando um sistema usa algo específico.
+3. Escrever 1–3 `flows`.
+4. `npm run validate` (Zod) → verificação visual com cada provedor → commit.
 
-## 7. Risks / decisions
+## 7. Riscos / decisões
 
-- **Mapping accuracy** – cloud product names change; keep a `lastVerified` field and a single source file.
-- **Diagram readability** for 25+ node systems – rely on tier grouping, collapsible groups and flow highlighting rather than showing everything at once.
-- **Copyright of PDF sources** – rewrite content in our own words (the PDFs quote blogs and DEV posts); keep only short attributions.
-- **Scope** – 46 topics is a lot; ship wave 1 (10 systems) before anything in Phase 2.
+- **Precisão do mapeamento** – nomes de produtos em nuvem mudam; manter um campo `lastVerified` e um único arquivo-fonte.
+- **Legibilidade do diagrama** para sistemas com mais de 25 nós – confiar no agrupamento por camadas, grupos recolhíveis e destaque de fluxo em vez de mostrar tudo de uma vez.
+- **Direitos autorais das fontes em PDF** – reescrever o conteúdo com nossas próprias palavras (os PDFs citam blogs e posts do DEV); manter apenas atribuições curtas.
+- **Escopo** – 46 tópicos é muita coisa; entregar a onda 1 (10 sistemas) antes de qualquer coisa da Fase 2.

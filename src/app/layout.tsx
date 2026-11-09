@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   ),
   title: "System Design Explainer",
   description:
-    "How YouTube, Instagram, Uber, Amazon and more are built. Interactive architecture diagrams you can switch between AWS, Google Cloud, Azure and open-source tools.",
+    "Como YouTube, Instagram, Uber, Amazon e outros são construídos. Diagramas de arquitetura interativos que você pode alternar entre AWS, Google Cloud, Azure e ferramentas de código aberto.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
   return (
     <html
-      lang="en"
+      lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       // The theme script sets data-theme before React hydrates.
       suppressHydrationWarning
@@ -55,7 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           href="#main-content"
           className="sr-only z-50 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-[#fff] focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
         >
-          Skip to content
+          Ir para o conteúdo
         </a>
         <div className="flex h-dvh flex-col overflow-hidden bg-bg text-fg">
           <SiteHeader systemGroups={systemGroups} searchIndex={buildSearchIndex()} />

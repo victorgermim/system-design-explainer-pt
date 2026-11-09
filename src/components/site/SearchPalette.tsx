@@ -12,6 +12,12 @@ const typeColors: Record<SearchItem["type"], string> = {
   Concept: "text-emerald-300 bg-emerald-500/10",
 };
 
+const typeLabels: Record<SearchItem["type"], string> = {
+  System: "Sistema",
+  Component: "Componente",
+  Concept: "Conceito",
+};
+
 export default function SearchPalette({
   items,
   open,
@@ -54,7 +60,7 @@ export default function SearchPalette({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Search"
+        aria-label="Buscar"
         className="w-full max-w-xl overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-2xl"
       >
         <div className="flex items-center gap-3 border-b border-line px-4">
@@ -76,7 +82,7 @@ export default function SearchPalette({
                 setActive((i) => Math.max(i - 1, 0));
               } else if (e.key === "Enter") go(results[active]);
             }}
-            placeholder="Search systems, components, services, concepts…"
+            placeholder="Buscar sistemas, componentes, serviços, conceitos…"
             className="h-12 w-full bg-transparent text-sm text-fg placeholder:text-muted focus:outline-none"
           />
           <kbd className="rounded border border-line-strong px-1.5 py-0.5 text-[10px] text-muted">Esc</kbd>
@@ -87,7 +93,7 @@ export default function SearchPalette({
             {results.length === 0 && (
               <li className="flex flex-col items-center gap-2 px-4 py-6 text-center text-sm text-muted">
                 <EmptyIllustration className="h-14 w-24" />
-                No matches for “{query}”
+                Nenhum resultado para “{query}”
               </li>
             )}
             {results.map((item, i) => (
@@ -101,7 +107,7 @@ export default function SearchPalette({
                   <span
                     className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${typeColors[item.type]}`}
                   >
-                    {item.type}
+                    {typeLabels[item.type]}
                   </span>
                   <span className="min-w-0">
                     <span className="block text-sm font-medium text-fg">{item.title}</span>

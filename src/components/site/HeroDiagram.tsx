@@ -6,11 +6,11 @@ import type { Provider, SystemDesign } from "@/types/schema";
 import type { FlowHighlight } from "@/lib/transformDiagram";
 
 const cycle: { id: Provider; label: string }[] = [
-  { id: "generic", label: "Generic" },
+  { id: "generic", label: "Genérico" },
   { id: "aws", label: "AWS" },
   { id: "gcp", label: "Google Cloud" },
   { id: "azure", label: "Azure" },
-  { id: "oss", label: "Open source" },
+  { id: "oss", label: "Código aberto" },
 ];
 const TICK_MS = 2200;
 
@@ -44,7 +44,7 @@ export default function HeroDiagram({ system }: { system: SystemDesign }) {
       <div className="absolute left-3 top-3 z-10 flex items-center gap-2 rounded-full border border-line bg-surface/90 px-3 py-1 text-xs backdrop-blur">
         <span className="h-2 w-2 rounded-full" style={{ background: `var(--provider-${provider.id})` }} aria-hidden />
         <span className="font-medium text-fg">{system.name}</span>
-        <span className="text-muted">on {provider.label}</span>
+        <span className="text-muted">em {provider.label}</span>
       </div>
       <ArchitectureDiagram
         system={system}

@@ -6,10 +6,10 @@ import { VisualButton, VisualFrame } from "./shared";
 const EPOCH = BigInt(1288834974657); // Twitter's custom epoch (Nov 2010)
 const WORKER = BigInt(7);
 const segments = [
-  { label: "Sign", bits: 1, colour: "var(--faint)", start: 0 },
-  { label: "Timestamp (ms since epoch)", bits: 41, colour: "#6366f1", start: 1 },
+  { label: "Sinal", bits: 1, colour: "var(--faint)", start: 0 },
+  { label: "Timestamp (ms desde a época)", bits: 41, colour: "#6366f1", start: 1 },
   { label: "Worker id", bits: 10, colour: "#f59e0b", start: 42 },
-  { label: "Sequence", bits: 12, colour: "#10b981", start: 52 },
+  { label: "Sequência", bits: 12, colour: "#10b981", start: 52 },
 ];
 
 // Fixed starting example so server and client render the same thing.
@@ -29,10 +29,10 @@ export default function SnowflakeId() {
 
   return (
     <VisualFrame
-      title="Try it: generate IDs"
-      hint="64 bits: time first (so IDs sort by creation), then which machine made it, then a per-millisecond counter."
+      title="Experimente: gerar IDs"
+      hint="64 bits: o tempo vem primeiro (para que os IDs sejam ordenados por criação), depois qual máquina o criou e, por fim, um contador por milissegundo."
     >
-      <div className="flex overflow-hidden rounded-lg border border-line" role="img" aria-label="64-bit ID layout">
+      <div className="flex overflow-hidden rounded-lg border border-line" role="img" aria-label="Layout de ID de 64 bits">
         {segments.map((seg) => {
           const bits = binary.slice(seg.start, seg.start + seg.bits);
           return (
@@ -48,14 +48,14 @@ export default function SnowflakeId() {
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <VisualButton primary onClick={generate}>
-          Generate ID
+          Gerar ID
         </VisualButton>
         <code className="rounded-lg bg-surface-2 px-3 py-1.5 font-mono text-sm text-fg">{id.toString()}</code>
       </div>
 
       <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-3">
         <div>
-          <dt className="text-muted">Created</dt>
+          <dt className="text-muted">Criado em</dt>
           <dd className="font-mono text-fg">{new Date(Number(state.ms)).toISOString().replace("T", " ").slice(0, 23)}</dd>
         </div>
         <div>
@@ -63,13 +63,13 @@ export default function SnowflakeId() {
           <dd className="font-mono text-fg">{WORKER.toString()}</dd>
         </div>
         <div>
-          <dt className="text-muted">Sequence</dt>
+          <dt className="text-muted">Sequência</dt>
           <dd className="font-mono text-fg">{state.seq.toString()}</dd>
         </div>
       </dl>
       <p className="mt-3 text-sm text-muted">
-        Click quickly: within the same millisecond only the sequence changes, so one worker can mint 4,096 IDs per
-        millisecond without asking anyone.
+        Clique rapidamente: dentro do mesmo milissegundo apenas a sequência muda, permitindo que um worker gere 4.096 IDs por
+        milissegundo sem consultar ninguém.
       </p>
     </VisualFrame>
   );

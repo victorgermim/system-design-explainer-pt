@@ -5,8 +5,8 @@ import { conceptFamilyLabels, concepts, systemsUsingConcept } from "@/content";
 import { FamilyIcon } from "@/lib/identity";
 
 export const metadata: Metadata = {
-  title: "Concepts · System Design Explainer",
-  description: "The recurring ideas behind large systems: caching, sharding, fan-out, idempotency, sagas and more.",
+  title: "Conceitos · System Design Explainer",
+  description: "As ideias recorrentes por trás de grandes sistemas: cache, sharding, fan-out, idempotência, sagas e mais.",
 };
 
 export default function ConceptsPage() {
@@ -16,13 +16,13 @@ export default function ConceptsPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-10">
-      <h1 className="text-3xl font-semibold tracking-tight text-fg md:text-4xl">Concepts</h1>
+      <h1 className="text-3xl font-semibold tracking-tight text-fg md:text-4xl">Conceitos</h1>
       <p className="mt-2 max-w-2xl text-muted">
-        The same handful of ideas appear again and again across the designs. Each page explains one with a
-        diagram you can step through — and links to the systems that rely on it.
+        As mesmas poucas ideias aparecem repetidamente nos designs. Cada página explica uma delas com um
+        diagrama que você pode percorrer passo a passo — e links para os sistemas que dependem dela.
       </p>
 
-      <nav aria-label="Concept families" className="mt-6 flex flex-wrap gap-2">
+      <nav aria-label="Famílias de conceitos" className="mt-6 flex flex-wrap gap-2">
         {groups.map(({ family, items }) => (
           <a
             key={family}
@@ -61,10 +61,10 @@ export default function ConceptsPage() {
                       <p className="mt-1 flex-1 text-sm leading-relaxed text-muted">{concept.summary}</p>
                       <p className="mt-3 flex items-center gap-2 text-xs text-muted">
                         {concept.visual && (
-                          <span className="rounded-full bg-cat-tint px-2 py-0.5 font-medium text-fg">Interactive</span>
+                          <span className="rounded-full bg-cat-tint px-2 py-0.5 font-medium text-fg">Interativo</span>
                         )}
                         <span className="truncate">
-                          {usedIn.length > 0 ? `Seen in ${usedIn.map((s) => s.name).join(", ")}` : "Reference"}
+                          {usedIn.length > 0 ? `Visto em ${usedIn.map((s) => s.name).join(", ")}` : "Referência"}
                         </span>
                       </p>
                     </Link>

@@ -31,7 +31,7 @@ export function PlayFlowButton({ flowId }: { flowId: string }) {
       }}
       className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/15 px-2.5 py-1 text-xs font-semibold text-amber-300 transition-colors hover:bg-amber-500/25"
     >
-      <Play size={12} /> Play on diagram
+      <Play size={12} /> Reproduzir no diagrama
     </button>
   );
 }

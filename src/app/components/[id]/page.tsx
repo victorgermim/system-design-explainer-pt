@@ -24,7 +24,7 @@ export async function generateMetadata(props: PageProps<"/components/[id]">): Pr
   const kind = getComponentKind(id);
   if (!kind) return {};
   return {
-    title: `${kind.name} · Components · System Design Explainer`,
+    title: `${kind.name} · Componentes · System Design Explainer`,
     description: kind.what,
   };
 }
@@ -44,7 +44,7 @@ export default async function ComponentPage(props: PageProps<"/components/[id]">
   return (
     <div className="max-w-5xl px-4 py-6 md:px-8 md:py-10">
       <Link href="/components" className="text-xs text-muted hover:text-fg">
-        ← All components
+        ← Todos os componentes
       </Link>
 
       <div className="mt-4 flex items-start gap-4">
@@ -65,15 +65,15 @@ export default async function ComponentPage(props: PageProps<"/components/[id]">
 
       {(kind.whenToUse.length > 0 || kind.pitfalls.length > 0) && (
         <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {kind.whenToUse.length > 0 && <ListCard title="When to use" items={kind.whenToUse} />}
-          {kind.pitfalls.length > 0 && <ListCard title="Pitfalls" items={kind.pitfalls} />}
+          {kind.whenToUse.length > 0 && <ListCard title="Quando usar" items={kind.whenToUse} />}
+          {kind.pitfalls.length > 0 && <ListCard title="Armadilhas" items={kind.pitfalls} />}
         </div>
       )}
 
       {(Object.keys(kind.providers).length > 0 || kind.thirdParty.length > 0) && (
         <section className="mt-10">
-          <h2 className="text-xl font-bold text-fg">Options by provider</h2>
-          <p className="mt-1 text-sm text-muted">The first option is what diagrams show for that provider.</p>
+          <h2 className="text-xl font-bold text-fg">Opções por provedor</h2>
+          <p className="mt-1 text-sm text-muted">A primeira opção é o que os diagramas mostram para esse provedor.</p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {serviceProviders.map((p) => {
               const options = kind.providers[p.id];
@@ -89,7 +89,7 @@ export default async function ComponentPage(props: PageProps<"/components/[id]">
             })}
             {kind.thirdParty.length > 0 && (
               <div className="rounded-xl border border-line bg-surface/40 p-4">
-                <h3 className="text-sm font-semibold text-fg-soft">Third-party (works with any cloud)</h3>
+                <h3 className="text-sm font-semibold text-fg-soft">Terceiros (funciona com qualquer nuvem)</h3>
                 <OptionList options={kind.thirdParty} />
               </div>
             )}
@@ -99,7 +99,7 @@ export default async function ComponentPage(props: PageProps<"/components/[id]">
 
       {kind.concepts.length > 0 && (
         <section className="mt-10">
-          <h2 className="text-xl font-bold text-fg">Related concepts</h2>
+          <h2 className="text-xl font-bold text-fg">Conceitos relacionados</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {kind.concepts.map((slug) => (
               <Link
@@ -115,9 +115,9 @@ export default async function ComponentPage(props: PageProps<"/components/[id]">
       )}
 
       <section className="mt-10">
-        <h2 className="text-xl font-bold text-fg">Used in</h2>
+        <h2 className="text-xl font-bold text-fg">Usado em</h2>
         {usages.length === 0 ? (
-          <p className="mt-2 text-sm text-muted">Not used in any system yet.</p>
+          <p className="mt-2 text-sm text-muted">Ainda não é usado em nenhum sistema.</p>
         ) : (
           <ul className="mt-4 space-y-3">
             {usages.map(({ system, nodes }) => (
@@ -161,7 +161,7 @@ function OptionList({ options }: { options: ServiceOption[] }) {
               o.managed ? "bg-sky-500/10 text-sky-300" : "bg-line-strong/50 text-fg-soft"
             }`}
           >
-            {o.managed ? "Managed" : "Self-hosted"}
+            {o.managed ? "Gerenciado" : "Auto-hospedado"}
           </span>
         </li>
       ))}

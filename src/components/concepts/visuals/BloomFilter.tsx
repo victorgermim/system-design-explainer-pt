@@ -20,10 +20,10 @@ export default function BloomFilter() {
 
   return (
     <VisualFrame
-      title="Try it: add and check URLs"
-      hint="Each URL sets 3 bits. A lookup is 'definitely new' if any of its bits is 0, otherwise 'probably seen'."
+      title="Experimente: adicionar e verificar URLs"
+      hint="Cada URL define 3 bits. Uma busca resulta em 'definitivamente nova' se qualquer um de seus bits for 0; caso contrário, 'provavelmente vista'."
     >
-      <div className="grid grid-cols-8 gap-1 sm:grid-cols-16" role="img" aria-label="Bit array">
+      <div className="grid grid-cols-8 gap-1 sm:grid-cols-16" role="img" aria-label="Vetor de bits">
         {Array.from({ length: BITS }, (_, i) => {
           const set = bits.has(i);
           const probed = probe.includes(i);
@@ -52,7 +52,7 @@ export default function BloomFilter() {
           className="h-9 min-w-0 flex-1 rounded-lg border border-line bg-bg px-3 font-mono text-sm text-fg focus:border-accent focus:outline-none"
         />
         <VisualButton onClick={() => setChecked(input.trim())} disabled={!input.trim()}>
-          Check
+          Verificar
         </VisualButton>
         <VisualButton
           primary
@@ -62,22 +62,22 @@ export default function BloomFilter() {
             setChecked(null);
           }}
         >
-          Add
+          Adicionar
         </VisualButton>
       </div>
 
       <p className="mt-3 text-sm" aria-live="polite">
-        Bits for this URL (amber): {probe.join(", ")}.{" "}
+        Bits para esta URL (âmbar): {probe.join(", ")}.{" "}
         {checked !== null &&
           (maybe ? (
             <span className="font-semibold text-amber-300">
-              Probably seen{items.includes(checked) ? "" : " — a false positive: it was never added!"}
+              Provavelmente vista{items.includes(checked) ? "" : " — um falso positivo: ela nunca foi adicionada!"}
             </span>
           ) : (
-            <span className="font-semibold text-emerald-300">Definitely not seen — skip the database.</span>
+            <span className="font-semibold text-emerald-300">Definitivamente não vista — pular o banco de dados.</span>
           ))}
       </p>
-      <p className="mt-2 text-xs text-muted">Added so far: {items.join(" · ")}</p>
+      <p className="mt-2 text-xs text-muted">Adicionadas até agora: {items.join(" · ")}</p>
     </VisualFrame>
   );
 }

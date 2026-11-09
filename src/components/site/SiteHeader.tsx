@@ -88,7 +88,7 @@ export default function SiteHeader({
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          aria-label="Open navigation"
+          aria-label="Abrir navegação"
           aria-expanded={drawerOpen}
           className="rounded-lg p-1.5 text-fg-soft hover:bg-surface-2 md:hidden"
         >
@@ -102,7 +102,7 @@ export default function SiteHeader({
           <span className="truncate">System Design Explainer</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
           <div ref={menuRef} className="relative">
             <button
               type="button"
@@ -113,7 +113,7 @@ export default function SiteHeader({
                 onSystems ? "bg-surface-2 text-fg" : "text-muted hover:bg-surface-2 hover:text-fg"
               }`}
             >
-              Systems
+              Sistemas
               <ChevronDown size={14} className={`transition-transform ${menuOpen ? "rotate-180" : ""}`} aria-hidden />
             </button>
             {menuOpen && (
@@ -148,24 +148,24 @@ export default function SiteHeader({
                   ))}
                 </div>
                 <Link href="/" onClick={closeAll} className="mt-4 inline-block text-sm font-medium text-accent hover:underline">
-                  Browse all systems →
+                  Ver todos os sistemas →
                 </Link>
               </div>
             )}
           </div>
-          {navLink("/components", "Components")}
-          {navLink("/concepts", "Concepts")}
+          {navLink("/components", "Componentes")}
+          {navLink("/concepts", "Conceitos")}
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
           <button
             type="button"
             onClick={openSearch}
-            aria-label="Search"
+            aria-label="Buscar"
             className="flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5 text-sm text-muted transition-colors hover:border-line-strong hover:text-fg md:w-56"
           >
             <Search size={15} aria-hidden />
-            <span className="hidden flex-1 text-left md:inline">Search…</span>
+            <span className="hidden flex-1 text-left md:inline">Buscar…</span>
             <kbd className="hidden rounded border border-line px-1.5 text-[10px] md:inline">Ctrl K</kbd>
           </button>
           <div className="hidden md:block">
@@ -175,7 +175,7 @@ export default function SiteHeader({
       </div>
 
       {drawerOpen && (
-        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true" aria-label="Navigation">
+        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true" aria-label="Navegação">
           <div className="absolute inset-0 bg-bg/70" onClick={() => setDrawerOpen(false)} />
           <aside className="relative flex h-full w-80 max-w-[88vw] flex-col border-r border-line bg-surface">
             <div className="flex items-center justify-between border-b border-line px-4 py-3">
@@ -183,17 +183,17 @@ export default function SiteHeader({
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                aria-label="Close navigation"
+                aria-label="Fechar navegação"
                 className="rounded-lg p-1.5 text-muted hover:bg-surface-2 hover:text-fg"
               >
                 <X size={18} />
               </button>
             </div>
-            <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-3 py-3">
+            <nav aria-label="Celular" className="flex-1 overflow-y-auto px-3 py-3">
               <div className="mb-3 flex gap-1">
-                {navLink("/", "Systems")}
-                {navLink("/components", "Components")}
-                {navLink("/concepts", "Concepts")}
+                {navLink("/", "Sistemas")}
+                {navLink("/components", "Componentes")}
+                {navLink("/concepts", "Conceitos")}
               </div>
               {systemGroups.map((group) => (
                 <div key={group.label} className="mb-4" data-category={group.category}>
